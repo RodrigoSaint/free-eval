@@ -1,7 +1,10 @@
 {
   "tasks": {
     "dev": "deno run --watch main.ts",
-    "migrate": "deno run -A npm:drizzle-kit push"
+    "migrate": "deno run -A migrate.ts",
+    "migrate:reset": "deno run -A migrate-reset.ts",
+    "migrate:generate": "deno run -A npm:drizzle-kit generate",
+    "migrate:apply": "deno run -A npm:drizzle-kit migrate"
   },
   "imports": {
     "@libsql/client": "npm:@libsql/client@^0.15.14",

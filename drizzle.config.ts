@@ -4,4 +4,5 @@ export default {
   dbCredentials: {
     url: 'file:database.db',
   },
-} as const;
+  out: './drizzle',
+};

@@ -1,17 +1,20 @@
-import { sqliteTable, text, index } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, real, integer, index } from 'drizzle-orm/sqlite-core';
 
 export const evalGroups = sqliteTable('eval_groups', {
-    id: text().primaryKey(),
+    id: text().primaryKey().$defaultFn(() => crypto.randomUUID()),
     name: text().notNull(),
-    createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
-    updatedAt: text('updated_at').notNull().$defaultFn(() => new Date().toISOString())
+    model: text().notNull(),
+    version: integer().notNull(),
+    createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()).notNull(),
+    updatedAt: text('updated_at').notNull().$defaultFn(() => new Date().toISOString()).notNull()
 });
 
 export const evals = sqliteTable('evals', {
-    id: text().primaryKey(),
+    id: text().primaryKey().$defaultFn(() => crypto.randomUUID()),
     input: text({ mode: 'json' }).notNull(),
-    output: text({ mode: 'json' }),
+    output: text({ mode: 'json' }).notNull(),
     expected: text({ mode: 'json' }),
+    score: real().notNull(),
     inputFingerPrint: text('input_finger_print').notNull(),
     evalGroupId: text('eval_group_id').notNull().references(() => evalGroups.id),
     createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
