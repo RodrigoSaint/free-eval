@@ -1,3 +1,6 @@
+import { useState } from "preact/hooks";
+import { EvalDrawer } from "./EvalDrawer.tsx";
+
 interface EvalResult {
   id: string;
   input: string;
@@ -27,6 +30,21 @@ interface MainContentProps {
 }
 
 export function MainContent({ groupDetails, onShowVersions, loading }: MainContentProps) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedResultIndex, setSelectedResultIndex] = useState(0);
+
+  const handleRowClick = (index: number) => {
+    setSelectedResultIndex(index);
+    setDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+  };
+
+  const handleSelectResult = (index: number) => {
+    setSelectedResultIndex(index);
+  };
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50">
@@ -159,26 +177,30 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {groupDetails.results.map((result) => (
-                  <tr key={result.id} className="hover:bg-gray-50 transition-colors">
+                {groupDetails.results.map((result, index) => (
+                  <tr 
+                    key={result.id} 
+                    className="hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => handleRowClick(index)}
+                  >
                     <td className="px-4 py-4 max-w-xs">
                       <div className="text-sm text-gray-900 break-words">
                         <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                          {result.input}
+                          {JSON.parse(result.input)}
                         </code>
                       </div>
                     </td>
                     <td className="px-4 py-4 max-w-xs">
                       <div className="text-sm text-gray-900 break-words">
                         <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                          {result.output}
+                          {JSON.parse(result.output)}
                         </code>
                       </div>
                     </td>
                     <td className="px-4 py-4 max-w-xs">
                       <div className="text-sm text-gray-900 break-words">
                         <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                          {result.expected}
+                          {JSON.parse(result.expected)}
                         </code>
                       </div>
                     </td>
@@ -205,6 +227,19 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
           )}
         </div>
       </div>
+      
+      {/* Eval Drawer */}
+      {groupDetails && (
+        <EvalDrawer
+          isOpen={drawerOpen}
+          results={groupDetails.results}
+          selectedResultIndex={selectedResultIndex}
+          onClose={handleCloseDrawer}
+          onSelectResult={handleSelectResult}
+          evalName={groupDetails.name}
+          evalScore={groupDetails.avgScore}
+        />
+      )}
     </div>
   );
 }
