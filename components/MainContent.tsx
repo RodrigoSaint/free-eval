@@ -22,9 +22,21 @@ interface EvalGroupDetails {
 interface MainContentProps {
   groupDetails: EvalGroupDetails | null;
   onShowVersions: (name: string) => void;
+  loading?: boolean;
 }
 
-export function MainContent({ groupDetails, onShowVersions }: MainContentProps) {
+export function MainContent({ groupDetails, onShowVersions, loading }: MainContentProps) {
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="text-gray-500 text-lg mb-2">Loading...</div>
+          <p className="text-gray-400">Fetching evaluation details</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!groupDetails) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50">

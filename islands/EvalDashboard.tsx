@@ -81,11 +81,13 @@ export default function EvalDashboard() {
   };
 
   const handleSelectGroup = async (groupId: number) => {
+    console.log('Selecting group:', groupId);
     setSelectedGroupId(groupId);
     setLoading(true);
     try {
       const response = await fetch(`/api/eval-results/${groupId}`);
       const data = await response.json();
+      console.log('Fetched data for group', groupId, ':', data);
       setSelectedGroupDetails(data);
     } catch (error) {
       console.error('Error fetching eval results:', error);
@@ -140,6 +142,7 @@ export default function EvalDashboard() {
       <MainContent
         groupDetails={selectedGroupDetails}
         onShowVersions={handleShowVersions}
+        loading={loading}
       />
 
       {showVersions && (
