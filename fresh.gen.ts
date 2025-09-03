@@ -3,16 +3,20 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $_app from "./routes/_app.tsx";
+import * as $api_eval_chart_name_ from "./routes/api/eval-chart/[name].ts";
 import * as $api_eval_groups from "./routes/api/eval-groups.ts";
 import * as $api_eval_results_groupId_ from "./routes/api/eval-results/[groupId].ts";
 import * as $api_eval_versions_name_ from "./routes/api/eval-versions/[name].ts";
 import * as $index from "./routes/index.tsx";
 import * as $EvalDashboard from "./islands/EvalDashboard.tsx";
+import * as $EvalHistoryChart from "./islands/EvalHistoryChart.tsx";
+import * as $SimpleChart from "./islands/SimpleChart.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
     "./routes/_app.tsx": $_app,
+    "./routes/api/eval-chart/[name].ts": $api_eval_chart_name_,
     "./routes/api/eval-groups.ts": $api_eval_groups,
     "./routes/api/eval-results/[groupId].ts": $api_eval_results_groupId_,
     "./routes/api/eval-versions/[name].ts": $api_eval_versions_name_,
@@ -20,6 +24,8 @@ const manifest = {
   },
   islands: {
     "./islands/EvalDashboard.tsx": $EvalDashboard,
+    "./islands/EvalHistoryChart.tsx": $EvalHistoryChart,
+    "./islands/SimpleChart.tsx": $SimpleChart,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

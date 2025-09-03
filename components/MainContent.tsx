@@ -1,5 +1,6 @@
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import { EvalDrawer } from "./EvalDrawer.tsx";
+import SimpleChart from "../islands/SimpleChart.tsx";
 
 interface EvalResult {
   id: string;
@@ -23,6 +24,12 @@ interface EvalGroupDetails {
   totalTests: number;
 }
 
+interface ChartDataPoint {
+  version: number;
+  score: number;
+  date: string;
+}
+
 interface MainContentProps {
   groupDetails: EvalGroupDetails | null;
   onShowVersions: (name: string) => void;
@@ -32,6 +39,29 @@ interface MainContentProps {
 export function MainContent({ groupDetails, onShowVersions, loading }: MainContentProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedResultIndex, setSelectedResultIndex] = useState(0);
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+  const [chartLoading, setChartLoading] = useState(false);
+
+  // Fetch chart data when groupDetails changes
+  useEffect(() => {
+    if (groupDetails) {
+      fetchChartData(groupDetails.name);
+    }
+  }, [groupDetails]);
+
+  const fetchChartData = async (evalName: string) => {
+    setChartLoading(true);
+    try {
+      const response = await fetch(`/api/eval-chart/${encodeURIComponent(evalName)}`);
+      const data = await response.json();
+      setChartData(data);
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+      setChartData([]);
+    } finally {
+      setChartLoading(false);
+    }
+  };
 
   const handleRowClick = (index: number) => {
     setSelectedResultIndex(index);
@@ -148,18 +178,18 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
           </div>
         </div>
 
-        {/* History Chart Placeholder */}
+        {/* History Chart */}
         <div className="mb-10">
           <h2 className="mb-4 font-medium text-lg text-gray-600">History</h2>
-          <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
-            <div className="text-gray-400">
-              <svg className="w-12 h-12 mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 3v18h18"/>
-                <path d="m19 9-5 5-4-4-3 3"/>
-              </svg>
-              <p className="text-sm">History chart coming soon</p>
+          {chartLoading ? (
+            <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
+              <div className="text-gray-400">
+                <p className="text-sm">Loading chart data...</p>
+              </div>
             </div>
-          </div>
+          ) : (
+            <SimpleChart data={chartData} />
+          )}
         </div>
 
         {/* Results Table */}

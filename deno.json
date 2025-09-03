@@ -38,7 +38,10 @@
     "$std/": "https://deno.land/std@0.216.0/",
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:tailwindcss@3.4.1/",
-    "tailwindcss/plugin": "npm:tailwindcss@3.4.1/plugin.js"
+    "tailwindcss/plugin": "npm:tailwindcss@3.4.1/plugin.js",
+    "react": "npm:react@18.2.0",
+    "react-dom": "npm:react-dom@18.2.0",
+    "recharts": "npm:recharts@2.12.7"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

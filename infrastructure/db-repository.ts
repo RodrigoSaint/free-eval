@@ -5,7 +5,8 @@ import {
   EvalRecord, 
   EvalGroupWithLatestRun, 
   EvalGroupDetails, 
-  EvalVersion 
+  EvalVersion,
+  ChartDataPoint
 } from '../core/repository.ts'
 
 export class DbEvalRepository implements EvalRepository {
@@ -135,6 +136,26 @@ export class DbEvalRepository implements EvalRepository {
       createdAt: result.createdAt,
       avgScore: result.avgScore || 0,
       totalTests: result.totalTests || 0,
+    }));
+  }
+
+  async getEvalHistoryChart(name: string): Promise<ChartDataPoint[]> {
+    const results = await db
+      .select({
+        version: evalGroups.version,
+        createdAt: evalGroups.createdAt,
+        avgScore: avg(evals.score),
+      })
+      .from(evalGroups)
+      .leftJoin(evals, eq(evalGroups.id, evals.evalGroupId))
+      .where(eq(evalGroups.name, name))
+      .groupBy(evalGroups.version, evalGroups.createdAt)
+      .orderBy(evalGroups.version);
+
+    return results.map(result => ({
+      version: result.version,
+      score: result.avgScore || 0,
+      date: result.createdAt,
     }));
   }
 }

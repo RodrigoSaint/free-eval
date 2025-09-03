@@ -49,6 +49,12 @@ export interface EvalVersion {
   totalTests: number;
 }
 
+export interface ChartDataPoint {
+  version: number;
+  score: number;
+  date: string;
+}
+
 export interface EvalRepository {
   // Original methods
   getMaxVersion(name: string): Promise<number | null>;
@@ -59,4 +65,5 @@ export interface EvalRepository {
   getAllEvalGroups(): Promise<EvalGroupWithLatestRun[]>;
   getEvalGroupDetails(groupId: string): Promise<EvalGroupDetails | null>;
   getEvalVersions(name: string): Promise<EvalVersion[]>;
+  getEvalHistoryChart(name: string): Promise<ChartDataPoint[]>;
 }
