@@ -1,5 +1,5 @@
 interface EvalVersion {
-  id: number;
+  id: string;
   name: string;
   model: string;
   version: number;
@@ -11,7 +11,7 @@ interface EvalVersion {
 interface VersionHistoryProps {
   versions: EvalVersion[];
   evalName: string;
-  onSelectVersion: (versionId: number) => void;
+  onSelectVersion: (versionId: string) => void;
   onClose: () => void;
 }
 

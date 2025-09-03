@@ -1,5 +1,5 @@
 interface EvalGroupWithLatestRun {
-  id: number;
+  id: string;
   name: string;
   model: string;
   latestVersion: number;
@@ -10,8 +10,8 @@ interface EvalGroupWithLatestRun {
 
 interface SidebarProps {
   evalGroups: EvalGroupWithLatestRun[];
-  selectedGroupId: number | null;
-  onSelectGroup: (groupId: number) => void;
+  selectedGroupId: string | null;
+  onSelectGroup: (groupId: string) => void;
   onShowVersions: (name: string) => void;
 }
 

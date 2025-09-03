@@ -1,15 +1,16 @@
 interface EvalResult {
-  id: number;
+  id: string;
   input: string;
   output: string;
   expected: string;
   score: number;
   inputFingerPrint: string;
-  evalGroupId: number;
+  evalGroupId: string;
+  createdAt: string;
 }
 
 interface EvalGroupDetails {
-  id: number;
+  id: string;
   name: string;
   model: string;
   version: number;

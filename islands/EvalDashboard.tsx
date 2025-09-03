@@ -4,7 +4,7 @@ import { MainContent } from "../components/MainContent.tsx";
 import { VersionHistory } from "../components/VersionHistory.tsx";
 
 interface EvalGroupWithLatestRun {
-  id: number;
+  id: string;
   name: string;
   model: string;
   latestVersion: number;
@@ -14,17 +14,18 @@ interface EvalGroupWithLatestRun {
 }
 
 interface EvalResult {
-  id: number;
+  id: string;
   input: string;
   output: string;
   expected: string;
   score: number;
   inputFingerPrint: string;
-  evalGroupId: number;
+  evalGroupId: string;
+  createdAt: string;
 }
 
 interface EvalGroupDetails {
-  id: number;
+  id: string;
   name: string;
   model: string;
   version: number;
@@ -35,7 +36,7 @@ interface EvalGroupDetails {
 }
 
 interface EvalVersion {
-  id: number;
+  id: string;
   name: string;
   model: string;
   version: number;
@@ -46,7 +47,7 @@ interface EvalVersion {
 
 export default function EvalDashboard() {
   const [evalGroups, setEvalGroups] = useState<EvalGroupWithLatestRun[]>([]);
-  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [selectedGroupDetails, setSelectedGroupDetails] = useState<EvalGroupDetails | null>(null);
   const [versions, setVersions] = useState<EvalVersion[]>([]);
   const [currentEvalName, setCurrentEvalName] = useState<string>('');
@@ -80,7 +81,7 @@ export default function EvalDashboard() {
     }
   };
 
-  const handleSelectGroup = async (groupId: number) => {
+  const handleSelectGroup = async (groupId: string) => {
     console.log('Selecting group:', groupId);
     setSelectedGroupId(groupId);
     setLoading(true);
@@ -111,7 +112,7 @@ export default function EvalDashboard() {
     }
   };
 
-  const handleSelectVersion = async (versionId: number) => {
+  const handleSelectVersion = async (versionId: string) => {
     await handleSelectGroup(versionId);
     setShowVersions(false);
   };

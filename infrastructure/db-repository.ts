@@ -1,6 +1,12 @@
 import { db, evalGroups, evals } from '../db.ts';
-import { eq, max } from 'drizzle-orm';
-import { EvalRepository, EvalRecord } from '../core/repository.ts'
+import { eq, max, desc, count, avg, sql } from 'drizzle-orm';
+import { 
+  EvalRepository, 
+  EvalRecord, 
+  EvalGroupWithLatestRun, 
+  EvalGroupDetails, 
+  EvalVersion 
+} from '../core/repository.ts'
 
 export class DbEvalRepository implements EvalRepository {
   async getMaxVersion(name: string): Promise<number | null> {
@@ -22,7 +28,7 @@ export class DbEvalRepository implements EvalRepository {
     return evalGroup;
   }
 
-  async saveEvalRecord(record: Omit<EvalRecord, 'id'>): Promise<void> {
+  async saveEvalRecord(record: Omit<EvalRecord, 'id' | 'createdAt'>): Promise<void> {
     await db.insert(evals).values({
       input: record.input,
       output: record.output,
@@ -31,5 +37,104 @@ export class DbEvalRepository implements EvalRepository {
       inputFingerPrint: record.inputFingerPrint,
       evalGroupId: record.evalGroupId,
     });
+  }
+
+  async getAllEvalGroups(): Promise<EvalGroupWithLatestRun[]> {
+    const results = await db
+      .select({
+        id: evalGroups.id,
+        name: evalGroups.name,
+        model: evalGroups.model,
+        version: evalGroups.version,
+        createdAt: evalGroups.createdAt,
+        totalTests: count(evals.id),
+        avgScore: avg(evals.score),
+      })
+      .from(evalGroups)
+      .leftJoin(evals, eq(evalGroups.id, evals.evalGroupId))
+      .groupBy(evalGroups.id, evalGroups.name, evalGroups.model, evalGroups.version, evalGroups.createdAt)
+      .orderBy(desc(evalGroups.createdAt));
+
+    // Group by name and get the latest version for each
+    const groupedByName = new Map<string, EvalGroupWithLatestRun>();
+    
+    for (const result of results) {
+      const existing = groupedByName.get(result.name);
+      const current: EvalGroupWithLatestRun = {
+        id: result.id,
+        name: result.name,
+        model: result.model,
+        latestVersion: result.version,
+        totalRuns: result.totalTests || 0,
+        lastRunAt: result.createdAt,
+        avgScore: result.avgScore || 0,
+      };
+
+      if (!existing || result.version > existing.latestVersion) {
+        groupedByName.set(result.name, current);
+      }
+    }
+
+    return Array.from(groupedByName.values()).sort((a, b) => 
+      new Date(b.lastRunAt).getTime() - new Date(a.lastRunAt).getTime()
+    );
+  }
+
+  async getEvalGroupDetails(groupId: string): Promise<EvalGroupDetails | null> {
+    const [evalGroup] = await db
+      .select()
+      .from(evalGroups)
+      .where(eq(evalGroups.id, groupId));
+
+    if (!evalGroup) return null;
+
+    const evalResults = await db
+      .select()
+      .from(evals)
+      .where(eq(evals.evalGroupId, groupId))
+      .orderBy(desc(evals.createdAt));
+
+    const avgScore = evalResults.length > 0 
+      ? evalResults.reduce((sum, result) => sum + result.score, 0) / evalResults.length 
+      : 0;
+
+    return {
+      id: evalGroup.id,
+      name: evalGroup.name,
+      model: evalGroup.model,
+      version: evalGroup.version,
+      createdAt: evalGroup.createdAt,
+      results: evalResults,
+      avgScore,
+      totalTests: evalResults.length,
+    };
+  }
+
+  async getEvalVersions(name: string): Promise<EvalVersion[]> {
+    const results = await db
+      .select({
+        id: evalGroups.id,
+        name: evalGroups.name,
+        model: evalGroups.model,
+        version: evalGroups.version,
+        createdAt: evalGroups.createdAt,
+        totalTests: count(evals.id),
+        avgScore: avg(evals.score),
+      })
+      .from(evalGroups)
+      .leftJoin(evals, eq(evalGroups.id, evals.evalGroupId))
+      .where(eq(evalGroups.name, name))
+      .groupBy(evalGroups.id, evalGroups.name, evalGroups.model, evalGroups.version, evalGroups.createdAt)
+      .orderBy(desc(evalGroups.version));
+
+    return results.map(result => ({
+      id: result.id,
+      name: result.name,
+      model: result.model,
+      version: result.version,
+      createdAt: result.createdAt,
+      avgScore: result.avgScore || 0,
+      totalTests: result.totalTests || 0,
+    }));
   }
 }
