@@ -2,6 +2,7 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
+import * as $_app from "./routes/_app.tsx";
 import * as $api_eval_groups from "./routes/api/eval-groups.ts";
 import * as $api_eval_results_groupId_ from "./routes/api/eval-results/[groupId].ts";
 import * as $api_eval_versions_name_ from "./routes/api/eval-versions/[name].ts";
@@ -11,6 +12,7 @@ import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
+    "./routes/_app.tsx": $_app,
     "./routes/api/eval-groups.ts": $api_eval_groups,
     "./routes/api/eval-results/[groupId].ts": $api_eval_results_groupId_,
     "./routes/api/eval-versions/[name].ts": $api_eval_versions_name_,
