@@ -30,6 +30,12 @@ interface ChartDataPoint {
   date: string;
 }
 
+interface ScoreProgressData {
+  version: number;
+  score: number;
+  date: string;
+}
+
 interface MainContentProps {
   groupDetails: EvalGroupDetails | null;
   onShowVersions: (name: string) => void;
@@ -41,6 +47,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
   const [selectedResultIndex, setSelectedResultIndex] = useState(0);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [chartLoading, setChartLoading] = useState(false);
+  const [scoreProgress, setScoreProgress] = useState<ScoreProgressData[]>([]);
 
   // Fetch chart data when groupDetails changes
   useEffect(() => {
@@ -63,9 +70,24 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
     }
   };
 
+  const fetchScoreProgress = async (fingerprint: string) => {
+    try {
+      const response = await fetch(`/api/score-progress/${encodeURIComponent(fingerprint)}`);
+      const data = await response.json();
+      setScoreProgress(data);
+    } catch (error) {
+      console.error('Error fetching score progress:', error);
+      setScoreProgress([]);
+    }
+  };
+
   const handleRowClick = (index: number) => {
     setSelectedResultIndex(index);
     setDrawerOpen(true);
+    
+    if (groupDetails?.results[index]) {
+      fetchScoreProgress(groupDetails.results[index].inputFingerPrint);
+    }
   };
 
   const handleCloseDrawer = () => {
@@ -74,6 +96,10 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
 
   const handleSelectResult = (index: number) => {
     setSelectedResultIndex(index);
+    
+    if (groupDetails?.results[index]) {
+      fetchScoreProgress(groupDetails.results[index].inputFingerPrint);
+    }
   };
   if (loading) {
     return (
@@ -268,6 +294,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
           onSelectResult={handleSelectResult}
           evalName={groupDetails.name}
           evalScore={groupDetails.avgScore}
+          scoreProgress={scoreProgress}
         />
       )}
     </div>

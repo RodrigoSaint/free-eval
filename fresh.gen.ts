@@ -7,6 +7,7 @@ import * as $api_eval_chart_name_ from "./routes/api/eval-chart/[name].ts";
 import * as $api_eval_groups from "./routes/api/eval-groups.ts";
 import * as $api_eval_results_groupId_ from "./routes/api/eval-results/[groupId].ts";
 import * as $api_eval_versions_name_ from "./routes/api/eval-versions/[name].ts";
+import * as $api_score_progress_fingerprint_ from "./routes/api/score-progress/[fingerprint].ts";
 import * as $index from "./routes/index.tsx";
 import * as $EvalDashboard from "./islands/EvalDashboard.tsx";
 import * as $EvalHistoryChart from "./islands/EvalHistoryChart.tsx";
@@ -20,6 +21,8 @@ const manifest = {
     "./routes/api/eval-groups.ts": $api_eval_groups,
     "./routes/api/eval-results/[groupId].ts": $api_eval_results_groupId_,
     "./routes/api/eval-versions/[name].ts": $api_eval_versions_name_,
+    "./routes/api/score-progress/[fingerprint].ts":
+      $api_score_progress_fingerprint_,
     "./routes/index.tsx": $index,
   },
   islands: {

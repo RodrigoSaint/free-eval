@@ -6,7 +6,8 @@ import {
   EvalGroupWithLatestRun, 
   EvalGroupDetails, 
   EvalVersion,
-  ChartDataPoint
+  ChartDataPoint,
+  ScoreProgressPoint
 } from '../core/repository.ts'
 
 export class DbEvalRepository implements EvalRepository {
@@ -155,6 +156,25 @@ export class DbEvalRepository implements EvalRepository {
     return results.map(result => ({
       version: result.version,
       score: result.avgScore || 0,
+      date: result.createdAt,
+    }));
+  }
+
+  async getScoreProgressByFingerprint(fingerprint: string): Promise<ScoreProgressPoint[]> {
+    const results = await db
+      .select({
+        version: evalGroups.version,
+        createdAt: evalGroups.createdAt,
+        score: evals.score,
+      })
+      .from(evals)
+      .innerJoin(evalGroups, eq(evals.evalGroupId, evalGroups.id))
+      .where(eq(evals.inputFingerPrint, fingerprint))
+      .orderBy(evalGroups.version);
+
+    return results.map(result => ({
+      version: result.version,
+      score: result.score,
       date: result.createdAt,
     }));
   }

@@ -55,6 +55,12 @@ export interface ChartDataPoint {
   date: string;
 }
 
+export interface ScoreProgressPoint {
+  version: number;
+  score: number;
+  date: string;
+}
+
 export interface EvalRepository {
   // Original methods
   getMaxVersion(name: string): Promise<number | null>;
@@ -66,4 +72,5 @@ export interface EvalRepository {
   getEvalGroupDetails(groupId: string): Promise<EvalGroupDetails | null>;
   getEvalVersions(name: string): Promise<EvalVersion[]>;
   getEvalHistoryChart(name: string): Promise<ChartDataPoint[]>;
+  getScoreProgressByFingerprint(fingerprint: string): Promise<ScoreProgressPoint[]>;
 }

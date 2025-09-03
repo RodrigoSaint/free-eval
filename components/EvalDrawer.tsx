@@ -1,3 +1,5 @@
+import SimpleChart from "../islands/SimpleChart.tsx";
+
 interface EvalResult {
   id: string;
   input: string;
@@ -9,6 +11,12 @@ interface EvalResult {
   createdAt: string;
 }
 
+interface ScoreProgressData {
+  version: number;
+  score: number;
+  date: string;
+}
+
 interface EvalDrawerProps {
   isOpen: boolean;
   results: EvalResult[];
@@ -17,6 +25,7 @@ interface EvalDrawerProps {
   onSelectResult: (index: number) => void;
   evalName: string;
   evalScore: number;
+  scoreProgress?: ScoreProgressData[];
 }
 
 export function EvalDrawer({ 
@@ -26,7 +35,8 @@ export function EvalDrawer({
   onClose, 
   onSelectResult,
   evalName,
-  evalScore
+  evalScore,
+  scoreProgress
 }: EvalDrawerProps) {
   if (!isOpen || results.length === 0) return null;
 
@@ -232,7 +242,6 @@ export function EvalDrawer({
                 </div>
 
                 <div className="h-px w-full bg-gray-200 mt-6 mb-4"></div>
-
                 {/* Score Section */}
                 <div className="mb-3">
                   <div className="flex items-center justify-between">
@@ -247,6 +256,20 @@ export function EvalDrawer({
                     {getScoreIcon(selectedResult.score)}
                   </span>
                 </div>
+                <div className="h-px w-full bg-gray-200 mt-6 mb-4"></div>
+                {/* Score Progress Chart */}
+                {scoreProgress && scoreProgress.length > 1 && (
+                  <>
+                   <div className="mb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-grow">
+                        <h2 className="font-medium text-base text-gray-600">Score Progress</h2>
+                      </div>
+                    </div>
+                  </div>
+                    <SimpleChart data={scoreProgress}  />
+                  </>
+                )}
               </div>
             </div>
           </div>
