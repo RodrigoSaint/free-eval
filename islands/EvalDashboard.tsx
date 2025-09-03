@@ -1,6 +1,6 @@
 import { useState, useEffect } from "preact/hooks";
-import { EvalGroupCard } from "../components/EvalGroupCard.tsx";
-import { EvalResults } from "../components/EvalResults.tsx";
+import { Sidebar } from "../components/Sidebar.tsx";
+import { MainContent } from "../components/MainContent.tsx";
 import { VersionHistory } from "../components/VersionHistory.tsx";
 
 interface EvalGroupWithLatestRun {
@@ -44,19 +44,28 @@ interface EvalVersion {
   totalTests: number;
 }
 
-type View = 'list' | 'results' | 'versions';
-
 export default function EvalDashboard() {
-  const [view, setView] = useState<View>('list');
   const [evalGroups, setEvalGroups] = useState<EvalGroupWithLatestRun[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [selectedGroupDetails, setSelectedGroupDetails] = useState<EvalGroupDetails | null>(null);
   const [versions, setVersions] = useState<EvalVersion[]>([]);
   const [currentEvalName, setCurrentEvalName] = useState<string>('');
+  const [showVersions, setShowVersions] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchEvalGroups();
   }, []);
+
+  // Auto-select latest eval when groups are loaded
+  useEffect(() => {
+    if (evalGroups.length > 0 && selectedGroupId === null) {
+      const latestGroup = evalGroups.reduce((latest, current) => 
+        new Date(current.lastRunAt) > new Date(latest.lastRunAt) ? current : latest
+      );
+      handleSelectGroup(latestGroup.id);
+    }
+  }, [evalGroups, selectedGroupId]);
 
   const fetchEvalGroups = async () => {
     setLoading(true);
@@ -71,13 +80,13 @@ export default function EvalDashboard() {
     }
   };
 
-  const fetchEvalResults = async (groupId: number) => {
+  const handleSelectGroup = async (groupId: number) => {
+    setSelectedGroupId(groupId);
     setLoading(true);
     try {
       const response = await fetch(`/api/eval-results/${groupId}`);
       const data = await response.json();
       setSelectedGroupDetails(data);
-      setView('results');
     } catch (error) {
       console.error('Error fetching eval results:', error);
     } finally {
@@ -85,14 +94,14 @@ export default function EvalDashboard() {
     }
   };
 
-  const fetchVersions = async (evalName: string) => {
+  const handleShowVersions = async (evalName: string) => {
     setLoading(true);
     try {
       const response = await fetch(`/api/eval-versions/${encodeURIComponent(evalName)}`);
       const data = await response.json();
       setVersions(data);
       setCurrentEvalName(evalName);
-      setView('versions');
+      setShowVersions(true);
     } catch (error) {
       console.error('Error fetching versions:', error);
     } finally {
@@ -101,79 +110,46 @@ export default function EvalDashboard() {
   };
 
   const handleSelectVersion = async (versionId: number) => {
-    await fetchEvalResults(versionId);
-    setView('results');
-  };
-
-  const handleBack = () => {
-    setView('list');
-    setSelectedGroupDetails(null);
+    await handleSelectGroup(versionId);
+    setShowVersions(false);
   };
 
   const handleCloseVersions = () => {
-    if (selectedGroupDetails) {
-      setView('results');
-    } else {
-      setView('list');
-    }
+    setShowVersions(false);
     setVersions([]);
     setCurrentEvalName('');
   };
 
-  if (loading) {
+  if (loading && evalGroups.length === 0) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="flex justify-center items-center h-screen bg-gray-50">
         <div className="text-gray-500">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        {view === 'list' && (
-          <>
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Evaluations</h1>
-              <p className="text-gray-600">View and manage your evaluation runs</p>
-            </div>
-            
-            {evalGroups.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-gray-500 text-lg">No evaluations found</div>
-                <p className="text-gray-400 mt-2">Run your first evaluation to see results here</p>
-              </div>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {evalGroups.map((group) => (
-                  <EvalGroupCard
-                    key={group.id}
-                    group={group}
-                    onClick={fetchEvalResults}
-                  />
-                ))}
-              </div>
-            )}
-          </>
-        )}
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar
+        evalGroups={evalGroups}
+        selectedGroupId={selectedGroupId}
+        onSelectGroup={handleSelectGroup}
+        onShowVersions={handleShowVersions}
+      />
+      
+      <MainContent
+        groupDetails={selectedGroupDetails}
+        onShowVersions={handleShowVersions}
+      />
 
-        {view === 'results' && selectedGroupDetails && (
-          <EvalResults
-            groupDetails={selectedGroupDetails}
-            onShowVersions={fetchVersions}
-            onBack={handleBack}
-          />
-        )}
-
-        {view === 'versions' && (
-          <VersionHistory
-            versions={versions}
-            evalName={currentEvalName}
-            onSelectVersion={handleSelectVersion}
-            onClose={handleCloseVersions}
-          />
-        )}
-      </div>
+      {showVersions && (
+        <VersionHistory
+          versions={versions}
+          evalName={currentEvalName}
+          onSelectVersion={handleSelectVersion}
+          onClose={handleCloseVersions}
+        />
+      )}
     </div>
   );
 }
