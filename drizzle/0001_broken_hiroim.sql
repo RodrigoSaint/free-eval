@@ -1,0 +1,1 @@
+ALTER TABLE `eval_groups` ADD `duration` real DEFAULT 0 NOT NULL;

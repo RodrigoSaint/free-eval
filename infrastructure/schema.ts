@@ -5,6 +5,7 @@ export const evalGroups = sqliteTable('eval_groups', {
     name: text().notNull(),
     model: text().notNull(),
     version: integer().notNull(),
+    duration: real().notNull().default(0),
     createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()).notNull(),
     updatedAt: text('updated_at').notNull().$defaultFn(() => new Date().toISOString()).notNull()
 });

@@ -11,6 +11,9 @@ import {
 } from '../core/eval.ts'
 
 export class DbEvalRepository implements EvalRepository {
+  async updateEvalGroupDuration(evalGroupId: string, totalDuration: number): Promise<void> {
+    await db.update(evalGroups).set({ duration: totalDuration }).where(eq(evalGroups.id, evalGroupId))
+  }
 
   async getMaxVersion(name: string): Promise<number | null> {
     const [maxVersionResult] = await db

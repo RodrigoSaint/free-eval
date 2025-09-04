@@ -68,6 +68,7 @@ export interface EvalRepository {
   getMaxVersion(name: string): Promise<number | null>;
   createEvalGroup(name: string, model: string, version: number): Promise<{ id: string }>;
   saveEvalRecord(record: Omit<EvalRecord, 'id' | 'createdAt'>): Promise<void>;
+  updateEvalGroupDuration(evalGroupId: string, totalDuration: number): Promise<void>
   
   // Web interface methods
   getAllEvalGroups(): Promise<EvalGroupWithLatestRun[]>;

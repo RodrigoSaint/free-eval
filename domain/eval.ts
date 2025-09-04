@@ -28,6 +28,7 @@ export class EvalDomain {
     const maxVersion = await this.repository.getMaxVersion(props.name);
     const nextVersion = (maxVersion ?? 0) + 1;
 
+    const evalGroupStartTime = Date.now();
     const evalGroup = await this.repository.createEvalGroup(
       props.name,
       props.model,
@@ -37,10 +38,10 @@ export class EvalDomain {
     const inputPromises = await props.getInputs();
     for (const inputPromise of inputPromises) {
       const { input, expected } = await inputPromise;
-      const startTime = Date.now();
+      const evalStartTime = Date.now();
       const output = await props.task(input);
-      const endTime = Date.now();
-      const duration = endTime - startTime;
+      const evalEndTime = Date.now();
+      const duration = evalEndTime - evalStartTime;
       const score = await props.scorer(input, output, expected);
 
       await this.repository.saveEvalRecord({
@@ -53,6 +54,10 @@ export class EvalDomain {
         evalGroupId: evalGroup.id,
       });
     }
+
+    const evalGroupEndTime = Date.now();
+    const totalDuration = evalGroupEndTime - evalGroupStartTime;
+    await this.repository.updateEvalGroupDuration(evalGroup.id, totalDuration);
   }
 
   private async generateInputFingerprint(input: any): Promise<string> {
