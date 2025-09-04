@@ -1,5 +1,9 @@
 {
+  "name": "@rodrigosaint/free-eval",
+  "version": "0.0.1",
   "lock": false,
+  "exports": "./package.ts",
+  "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts",
     "migrate": "deno run -A migrate.ts",

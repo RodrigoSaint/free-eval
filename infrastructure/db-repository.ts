@@ -1,5 +1,6 @@
 import { db, evalGroups, evals } from '../db.ts';
 import { eq, max, desc, count, avg, sql } from 'drizzle-orm';
+import { migrate } from 'drizzle-orm/libsql/migrator';
 import { 
   EvalRepository, 
   EvalRecord, 
@@ -11,6 +12,9 @@ import {
 } from '../core/repository.ts'
 
 export class DbEvalRepository implements EvalRepository {
+  async initializeDatabase(): Promise<void> {
+    await migrate(db, { migrationsFolder: './drizzle' });
+  }
   async getMaxVersion(name: string): Promise<number | null> {
     const [maxVersionResult] = await db
       .select({ maxVersion: max(evalGroups.version) })
@@ -69,7 +73,7 @@ export class DbEvalRepository implements EvalRepository {
         latestVersion: result.version,
         totalRuns: result.totalTests || 0,
         lastRunAt: result.createdAt,
-        avgScore: result.avgScore || 0,
+        avgScore: parseFloat(result.avgScore ?? "0") || 0,
       };
 
       if (!existing || result.version > existing.latestVersion) {
@@ -106,7 +110,7 @@ export class DbEvalRepository implements EvalRepository {
       model: evalGroup.model,
       version: evalGroup.version,
       createdAt: evalGroup.createdAt,
-      results: evalResults,
+      results: evalResults as EvalRecord[],
       avgScore,
       totalTests: evalResults.length,
     };
@@ -135,7 +139,7 @@ export class DbEvalRepository implements EvalRepository {
       model: result.model,
       version: result.version,
       createdAt: result.createdAt,
-      avgScore: result.avgScore || 0,
+      avgScore: parseFloat(result.avgScore ?? "0") || 0,
       totalTests: result.totalTests || 0,
     }));
   }
@@ -155,7 +159,7 @@ export class DbEvalRepository implements EvalRepository {
 
     return results.map(result => ({
       version: result.version,
-      score: result.avgScore || 0,
+      score: parseFloat(result.avgScore ?? "0") || 0,
       date: result.createdAt,
     }));
   }
