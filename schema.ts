@@ -15,6 +15,7 @@ export const evals = sqliteTable('evals', {
     output: text({ mode: 'json' }).notNull(),
     expected: text({ mode: 'json' }),
     score: real().notNull(),
+    duration: real().notNull().default(0),
     inputFingerPrint: text('input_finger_print').notNull(),
     evalGroupId: text('eval_group_id').notNull().references(() => evalGroups.id),
     createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),

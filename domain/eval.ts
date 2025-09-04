@@ -37,7 +37,10 @@ export class EvalDomain {
     const inputPromises = await props.getInputs();
     for (const inputPromise of inputPromises) {
       const { input, expected } = await inputPromise;
+      const startTime = Date.now();
       const output = await props.task(input);
+      const endTime = Date.now();
+      const duration = endTime - startTime;
       const score = await props.scorer(input, output, expected);
 
       await this.repository.saveEvalRecord({
@@ -45,6 +48,7 @@ export class EvalDomain {
         output: JSON.stringify(output),
         expected: JSON.stringify(expected),
         score: typeof score === "boolean" ? (score ? 1 : 0) : score,
+        duration: duration,
         inputFingerPrint: await this.generateInputFingerprint(input),
         evalGroupId: evalGroup.id,
       });

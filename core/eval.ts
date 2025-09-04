@@ -14,6 +14,7 @@ export interface EvalRecord {
   score: number;
   inputFingerPrint: string;
   evalGroupId: string;
+  duration: number;
   createdAt: string;
 }
 
