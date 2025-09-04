@@ -1,4 +1,4 @@
-import { db, evalGroups, evals } from '../db.ts';
+import { db, evalGroups, evals } from './db.ts';
 import { eq, max, desc, count, avg, sql } from 'drizzle-orm';
 import { migrate } from 'drizzle-orm/libsql/migrator';
 import { 

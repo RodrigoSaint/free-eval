@@ -1,10 +1,12 @@
-const databaseUrl = Deno.env.get('DATABASE_URL') || `file:${Deno.env.get('DATABASE_PATH') || 'database.db'}`;
-const authToken = Deno.env.get('DATABASE_AUTH_TOKEN');
-const user = Deno.env.get('DATABASE_USER');
-const password = Deno.env.get('DATABASE_PASSWORD');
+import process from "node:process"
+
+const databaseUrl = process.env['DATABASE_URL'] || `file:${process.env['DATABASE_PATH'] || 'database.db'}`;
+const authToken = process.env['DATABASE_AUTH_TOKEN'];
+const user = process.env['DATABASE_USER'];
+const password = process.env['DATABASE_PASSWORD'];
 
 export default {
-  schema: './schema.ts',
+  schema: './infrastructure/schema.ts',
   dialect: 'sqlite',
   dbCredentials: {
     url: databaseUrl,

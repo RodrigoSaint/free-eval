@@ -8,7 +8,7 @@
     "dev": "deno run --watch sample.ts",
     "migrate": "deno run -A migrate.ts",
     "migrate:reset": "deno run -A migrate-reset.ts",
-    "migrate:generate": "deno run -A npm:drizzle-kit generate",
+    "migrate:generate": "deno run -A --node-modules-dir npm:drizzle-kit generate",
     "migrate:apply": "deno run -A npm:drizzle-kit migrate",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
