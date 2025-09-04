@@ -1,6 +1,7 @@
-import { useState, useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { DurationProgressData, EvalDrawer } from "./EvalDrawer.tsx";
 import SimpleChart from "../islands/SimpleChart.tsx";
+import TimeChart from "../islands/TimeChart.tsx";
 
 interface EvalResult {
   id: string;
@@ -11,7 +12,7 @@ interface EvalResult {
   inputFingerPrint: string;
   evalGroupId: string;
   createdAt: string;
-  duration: number
+  duration: number;
 }
 
 interface EvalGroupDetails {
@@ -29,6 +30,7 @@ interface ChartDataPoint {
   version: number;
   score: number;
   date: string;
+  duration: number;
 }
 
 interface ScoreProgressData {
@@ -43,13 +45,17 @@ interface MainContentProps {
   loading?: boolean;
 }
 
-export function MainContent({ groupDetails, onShowVersions, loading }: MainContentProps) {
+export function MainContent(
+  { groupDetails, onShowVersions, loading }: MainContentProps,
+) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedResultIndex, setSelectedResultIndex] = useState(0);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [chartLoading, setChartLoading] = useState(false);
   const [scoreProgress, setScoreProgress] = useState<ScoreProgressData[]>([]);
-  const [durationProgressData, setDurationProgressData] = useState<DurationProgressData[]>()
+  const [durationProgressData, setDurationProgressData] = useState<
+    DurationProgressData[]
+  >();
 
   // Fetch chart data when groupDetails changes
   useEffect(() => {
@@ -61,11 +67,13 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
   const fetchChartData = async (evalName: string) => {
     setChartLoading(true);
     try {
-      const response = await fetch(`/api/eval-chart/${encodeURIComponent(evalName)}`);
+      const response = await fetch(
+        `/api/eval-chart/${encodeURIComponent(evalName)}`,
+      );
       const data = await response.json();
       setChartData(data);
     } catch (error) {
-      console.error('Error fetching chart data:', error);
+      console.error("Error fetching chart data:", error);
       setChartData([]);
     } finally {
       setChartLoading(false);
@@ -74,12 +82,14 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
 
   const fetchScoreProgress = async (fingerprint: string) => {
     try {
-      const response = await fetch(`/api/score-progress/${encodeURIComponent(fingerprint)}`);
+      const response = await fetch(
+        `/api/score-progress/${encodeURIComponent(fingerprint)}`,
+      );
       const data = await response.json();
       setScoreProgress(data);
       setDurationProgressData(data);
     } catch (error) {
-      console.error('Error fetching score progress:', error);
+      console.error("Error fetching score progress:", error);
       setScoreProgress([]);
     }
   };
@@ -87,7 +97,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
   const handleRowClick = (index: number) => {
     setSelectedResultIndex(index);
     setDrawerOpen(true);
-    
+
     if (groupDetails?.results[index]) {
       fetchScoreProgress(groupDetails.results[index].inputFingerPrint);
     }
@@ -99,7 +109,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
 
   const handleSelectResult = (index: number) => {
     setSelectedResultIndex(index);
-    
+
     if (groupDetails?.results[index]) {
       fetchScoreProgress(groupDetails.results[index].inputFingerPrint);
     }
@@ -120,39 +130,61 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
       <div className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="text-gray-500 text-lg mb-2">Select an evaluation</div>
-          <p className="text-gray-400">Choose an evaluation from the sidebar to view details</p>
+          <p className="text-gray-400">
+            Choose an evaluation from the sidebar to view details
+          </p>
         </div>
       </div>
     );
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-yellow-600";
+    return "text-red-600";
   };
 
   const getScoreIcon = (score: number) => {
-    if (score === 1) return (
-      <svg className="size-3 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="m8 14 4-4 4 4"/>
-      </svg>
-    );
+    if (score === 1) {
+      return (
+        <svg
+          className="size-3 text-green-600"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="m8 14 4-4 4 4" />
+        </svg>
+      );
+    }
     return (
-      <svg className="size-3 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="m16 14-4-4-4 4"/>
+      <svg
+        className="size-3 text-red-600"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <path d="m16 14-4-4-4 4" />
       </svg>
     );
   };
@@ -164,9 +196,18 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button className="p-1 hover:bg-gray-100 rounded">
-              <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect width="18" height="18" x="3" y="3" rx="2"/>
-                <path d="M9 3v18"/>
+              <svg
+                className="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M9 3v18" />
               </svg>
             </button>
             <div className="h-4 w-px bg-gray-300"></div>
@@ -176,7 +217,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
               </span>
             </nav>
           </div>
-          
+
           <button
             onClick={() => onShowVersions(groupDetails.name)}
             className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors"
@@ -193,10 +234,10 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
           <h1 className="text-2xl font-medium text-gray-700 mb-2 tracking-tight">
             {groupDetails.name}
           </h1>
-          
+
           <div className="flex items-center text-sm text-gray-600">
             <div className="flex items-center space-x-2">
-              <span>{(groupDetails.avgScore).toFixed(0)}%</span>
+              <span>{groupDetails.avgScore.toFixed(0)}%</span>
               {getScoreIcon(groupDetails.avgScore)}
             </div>
             <div className="h-4 w-px bg-gray-300 mx-4"></div>
@@ -210,36 +251,62 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
 
         {/* History Chart */}
         <div className="mb-10">
-          <h2 className="mb-4 font-medium text-lg text-gray-600">History</h2>
-          {chartLoading ? (
-            <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
-              <div className="text-gray-400">
-                <p className="text-sm">Loading chart data...</p>
+          {chartLoading
+            ? (
+              <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
+                <div className="text-gray-400">
+                  <p className="text-sm">Loading chart data...</p>
+                </div>
               </div>
-            </div>
-          ) : (
-            <SimpleChart data={chartData} />
-          )}
+            )
+            : (
+              <div className="flex flex-col gap-4">
+                <div>
+                  <h2 className="mb-2 font-medium text-lg text-gray-600">
+                    Score
+                  </h2>
+                  <SimpleChart data={chartData} />
+                </div>
+
+                <div>
+                  <h2 className="mb-2 font-medium text-lg text-gray-600">
+                    Duration
+                  </h2>
+                  <TimeChart data={chartData} />
+                </div>
+              </div>
+            )}
         </div>
 
         {/* Results Table */}
         <div>
           <h2 className="mb-4 font-medium text-lg text-gray-600">Results</h2>
-          
+
           <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Input</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Output</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l border-gray-200">Score</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Input
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Output
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Expected
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l border-gray-200">
+                    Score
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l border-gray-200">
+                    Duration
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {groupDetails.results.map((result, index) => (
-                  <tr 
-                    key={result.id} 
+                  <tr
+                    key={result.id}
                     className="hover:bg-gray-50 transition-colors cursor-pointer"
                     onClick={() => handleRowClick(index)}
                   >
@@ -266,10 +333,17 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
                     </td>
                     <td className="px-4 py-4 border-l border-gray-200">
                       <div className="flex items-center space-x-2">
-                        <span className={`text-sm ${getScoreColor(result.score)}`}>
-                          {(result.score).toFixed(0)}%
+                        <span
+                          className={`text-sm ${getScoreColor(result.score)}`}
+                        >
+                          {result.score.toFixed(0)}%
                         </span>
                         {getScoreIcon(result.score)}
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 border-l border-gray-200">
+                      <div className="text-sm text-gray-900 break-words">
+                        {result.duration} ms
                       </div>
                     </td>
                   </tr>
@@ -287,7 +361,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
           )}
         </div>
       </div>
-      
+
       {/* Eval Drawer */}
       {groupDetails && (
         <EvalDrawer

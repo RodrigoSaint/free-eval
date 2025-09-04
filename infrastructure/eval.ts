@@ -150,17 +150,19 @@ export class DbEvalRepository implements EvalRepository {
       .select({
         version: evalGroups.version,
         createdAt: evalGroups.createdAt,
+        duration: evalGroups.duration,
         avgScore: avg(evals.score),
       })
       .from(evalGroups)
       .leftJoin(evals, eq(evalGroups.id, evals.evalGroupId))
       .where(eq(evalGroups.name, name))
-      .groupBy(evalGroups.version, evalGroups.createdAt)
+      .groupBy(evalGroups.version, evalGroups.createdAt, evalGroups.duration)
       .orderBy(evalGroups.version);
 
     return results.map(result => ({
       version: result.version,
       score: parseFloat(result.avgScore ?? "0") || 0,
+      duration: result.duration,
       date: result.createdAt,
     }));
   }
