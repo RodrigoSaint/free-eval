@@ -134,7 +134,8 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
   };
 
   const getScoreColor = (score: number) => {
-    if (score === 1) return 'text-green-600';
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
     return 'text-red-600';
   };
 
@@ -192,7 +193,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
           
           <div className="flex items-center text-sm text-gray-600">
             <div className="flex items-center space-x-2">
-              <span>{(groupDetails.avgScore * 100).toFixed(0)}%</span>
+              <span>{(groupDetails.avgScore).toFixed(0)}%</span>
               {getScoreIcon(groupDetails.avgScore)}
             </div>
             <div className="h-4 w-px bg-gray-300 mx-4"></div>
@@ -263,7 +264,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
                     <td className="px-4 py-4 border-l border-gray-200">
                       <div className="flex items-center space-x-2">
                         <span className={`text-sm ${getScoreColor(result.score)}`}>
-                          {(result.score * 100).toFixed(0)}%
+                          {(result.score).toFixed(0)}%
                         </span>
                         {getScoreIcon(result.score)}
                       </div>

@@ -10,7 +10,6 @@ import * as $api_eval_versions_name_ from "./routes/api/eval-versions/[name].ts"
 import * as $api_score_progress_fingerprint_ from "./routes/api/score-progress/[fingerprint].ts";
 import * as $index from "./routes/index.tsx";
 import * as $EvalDashboard from "./islands/EvalDashboard.tsx";
-import * as $EvalHistoryChart from "./islands/EvalHistoryChart.tsx";
 import * as $SimpleChart from "./islands/SimpleChart.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
@@ -27,7 +26,6 @@ const manifest = {
   },
   islands: {
     "./islands/EvalDashboard.tsx": $EvalDashboard,
-    "./islands/EvalHistoryChart.tsx": $EvalHistoryChart,
     "./islands/SimpleChart.tsx": $SimpleChart,
   },
   baseUrl: import.meta.url,

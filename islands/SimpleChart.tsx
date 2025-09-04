@@ -12,6 +12,7 @@ interface SimpleChartProps {
 
 export default function SimpleChart({ data }: SimpleChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  console.log(data)
 
   useEffect(() => {
     if (!canvasRef.current || !data || data.length === 0) return;

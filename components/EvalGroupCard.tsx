@@ -24,8 +24,8 @@ export function EvalGroupCard({ group, onClick }: EvalGroupCardProps) {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 0.8) return 'text-green-600';
-    if (score >= 0.6) return 'text-yellow-600';
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
     return 'text-red-600';
   };
 
@@ -41,7 +41,7 @@ export function EvalGroupCard({ group, onClick }: EvalGroupCardProps) {
         </div>
         <div className="text-right">
           <span className={`text-2xl font-bold ${getScoreColor(group.avgScore)}`}>
-            {(group.avgScore * 100).toFixed(0)}%
+            {(group.avgScore).toFixed(0)}%
           </span>
         </div>
       </div>

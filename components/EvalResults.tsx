@@ -37,8 +37,9 @@ export function EvalResults({ groupDetails, onShowVersions, onBack }: EvalResult
   };
 
   const getScoreColor = (score: number) => {
-    if (score === 1) return 'text-green-600 bg-green-50';
-    return 'text-red-600 bg-red-50';
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   return (
@@ -60,7 +61,7 @@ export function EvalResults({ groupDetails, onShowVersions, onBack }: EvalResult
           
           <div className="text-right">
             <div className="text-3xl font-bold text-gray-900">
-              {(groupDetails.avgScore * 100).toFixed(0)}%
+              {(groupDetails.avgScore).toFixed(0)}%
             </div>
             <div className="text-sm text-gray-500">
               {groupDetails.results.filter(r => r.score === 1).length}/{groupDetails.totalTests} passed
@@ -104,7 +105,7 @@ export function EvalResults({ groupDetails, onShowVersions, onBack }: EvalResult
               
               <div className="ml-6">
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(result.score)}`}>
-                  {result.score === 1 ? '✓ Pass' : '✗ Fail'}
+                  {result.score > 60 ? '✓ Pass' : '✗ Fail'}
                 </span>
               </div>
             </div>

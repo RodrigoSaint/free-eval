@@ -27,8 +27,8 @@ export function VersionHistory({ versions, evalName, onSelectVersion, onClose }:
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 0.8) return 'text-green-600';
-    if (score >= 0.6) return 'text-yellow-600';
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
     return 'text-red-600';
   };
 
@@ -71,7 +71,7 @@ export function VersionHistory({ versions, evalName, onSelectVersion, onClose }:
                 <div className="flex items-center space-x-4">
                   <span className="text-sm text-gray-500">{version.totalTests} tests</span>
                   <span className={`text-lg font-semibold ${getScoreColor(version.avgScore)}`}>
-                    {(version.avgScore * 100).toFixed(0)}%
+                    {(version.avgScore).toFixed(0)}%
                   </span>
                 </div>
               </div>

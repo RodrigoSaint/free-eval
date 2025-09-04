@@ -19,7 +19,7 @@ evalDomain.run({
   },
   // The scoring methods for the eval
   scorer: async (input, output, expected) => {
-    return output === expected ? 1 : 0;
+    return output === expected ? 100 : 0;
   },
 });
 

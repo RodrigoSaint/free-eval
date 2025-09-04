@@ -34,7 +34,6 @@ export function EvalDrawer({
   selectedResultIndex, 
   onClose, 
   onSelectResult,
-  evalName,
   evalScore,
   scoreProgress
 }: EvalDrawerProps) {
@@ -100,7 +99,7 @@ export function EvalDrawer({
                 <div className="flex flex-wrap items-center gap-1.5 break-words text-sm text-gray-500">
                   <div className="inline-flex items-center gap-1.5">
                     <span className="flex items-center space-x-2">
-                      <span>{(evalScore * 100).toFixed(0)}%</span>
+                      <span>{(evalScore).toFixed(0)}%</span>
                       {getScoreIcon(evalScore)}
                     </span>
                   </div>
@@ -252,7 +251,7 @@ export function EvalDrawer({
                 </div>
                 <div className="mt-1 text-gray-600">
                   <span className="flex items-center space-x-2">
-                    <span>{(selectedResult.score * 100).toFixed(0)}%</span>
+                    <span>{(selectedResult.score).toFixed(0)}%</span>
                     {getScoreIcon(selectedResult.score)}
                   </span>
                 </div>

@@ -17,8 +17,8 @@ interface SidebarProps {
 
 export function Sidebar({ evalGroups, selectedGroupId, onSelectGroup, onShowVersions }: SidebarProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 0.8) return 'text-green-600';
-    if (score >= 0.6) return 'text-yellow-600';
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
     return 'text-red-600';
   };
 
@@ -62,7 +62,7 @@ export function Sidebar({ evalGroups, selectedGroupId, onSelectGroup, onShowVers
         <div>
           <p className="text-xs font-medium text-gray-500 mb-2">Summary</p>
           <div className="flex items-center space-x-2 text-gray-600 font-medium text-2xl">
-            <span>{(overallScore * 100).toFixed(0)}%</span>
+            <span>{(overallScore).toFixed(0)}%</span>
             {getScoreIcon(overallScore)}
           </div>
         </div>
@@ -89,7 +89,7 @@ export function Sidebar({ evalGroups, selectedGroupId, onSelectGroup, onShowVers
                   <span className="font-medium truncate">{group.name}</span>
                   <div className="flex items-center space-x-1">
                     <span className={getScoreColor(group.avgScore)}>
-                      {(group.avgScore * 100).toFixed(0)}%
+                      {(group.avgScore).toFixed(0)}%
                     </span>
                     {getScoreIcon(group.avgScore)}
                   </div>
