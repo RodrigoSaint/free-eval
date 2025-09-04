@@ -29,6 +29,18 @@
   "exclude": [
     "**/_fresh/*"
   ],
+  "publish": {
+    "exclude": [
+      "components/",
+      "islands/",
+      "routes/",
+      "static/",
+      "fresh.*.ts",
+      "tailwind.config.ts",
+      "web.ts",
+      "web-main.ts"
+    ]
+  },
   "imports": {
     "@libsql/client": "npm:@libsql/client@^0.15.14",
     "@std/assert": "jsr:@std/assert@1",
