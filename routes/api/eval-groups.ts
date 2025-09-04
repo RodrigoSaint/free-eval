@@ -1,5 +1,5 @@
 import { FreshContext } from "$fresh/server.ts";
-import { DbEvalRepository } from "../../infrastructure/db-repository.ts";
+import { DbEvalRepository } from "../../infrastructure/eval.ts";
 
 export const handler = {
   async GET(_req: Request, _ctx: FreshContext): Promise<Response> {

@@ -9,7 +9,7 @@ import {
   EvalVersion,
   ChartDataPoint,
   ScoreProgressPoint
-} from '../core/repository.ts'
+} from '../core/eval.ts'
 
 export class DbEvalRepository implements EvalRepository {
   async initializeDatabase(): Promise<void> {

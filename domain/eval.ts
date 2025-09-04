@@ -1,4 +1,4 @@
-import { EvalRepository } from "../core/repository.ts";
+import { EvalRepository } from "../core/eval.ts";
 
 export interface FEvalProps<Input, Output, Expected> {
   name: string;

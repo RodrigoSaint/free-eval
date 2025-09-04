@@ -1,5 +1,5 @@
 import { EvalDomain } from "./domain/eval.ts";
-import { DbEvalRepository } from "./infrastructure/db-repository.ts";
+import { DbEvalRepository } from "./infrastructure/eval.ts";
 
 const evalDomain = new EvalDomain(new DbEvalRepository());
 
