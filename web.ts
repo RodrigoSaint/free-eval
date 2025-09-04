@@ -2,9 +2,9 @@
 
 import dev from "$fresh/dev.ts";
 import config from "./fresh.config.ts";
-import {migrateDb} from "./infrastructure/migrate.ts"
+import {createDbInstance} from "./infrastructure/migrate.ts"
 
-await migrateDb()
+await createDbInstance()
 
 import "$std/dotenv/load.ts";
 
