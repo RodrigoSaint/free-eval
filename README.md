@@ -22,6 +22,9 @@ Free Eval provides a straightforward way to:
 - ✅ **Self-Hostable**: Run entirely on your own infrastructure
 - ✅ **Free**: Completely free to use, no strings attached
 
+![image](./images/eval_groups.png)
+![image](./images/eval_details.png)
+
 ## Quick Start
 
 ### Basic Usage
