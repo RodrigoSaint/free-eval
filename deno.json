@@ -36,6 +36,7 @@
       "routes/",
       "static/",
       "fresh.*.ts",
+      "example.html",
       "tailwind.config.ts",
       "web.ts",
       "web-main.ts"
