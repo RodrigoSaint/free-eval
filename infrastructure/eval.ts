@@ -39,6 +39,7 @@ export class DbEvalRepository implements EvalRepository {
       score: record.score,
       inputFingerPrint: record.inputFingerPrint,
       evalGroupId: record.evalGroupId,
+      duration: record.duration
     });
   }
 
@@ -167,6 +168,7 @@ export class DbEvalRepository implements EvalRepository {
         version: evalGroups.version,
         createdAt: evalGroups.createdAt,
         score: evals.score,
+        duration: evals.duration,
       })
       .from(evals)
       .innerJoin(evalGroups, eq(evals.evalGroupId, evalGroups.id))
@@ -177,6 +179,7 @@ export class DbEvalRepository implements EvalRepository {
       version: result.version,
       score: result.score,
       date: result.createdAt,
+      duration: result.duration
     }));
   }
 }

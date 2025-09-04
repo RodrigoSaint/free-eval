@@ -52,8 +52,6 @@ export class EvalDomain {
         inputFingerPrint: await this.generateInputFingerprint(input),
         evalGroupId: evalGroup.id,
       });
-
-      console.log(score);
     }
   }
 

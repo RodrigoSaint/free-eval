@@ -9,6 +9,7 @@ interface EvalResult {
   inputFingerPrint: string;
   evalGroupId: string;
   createdAt: string;
+  duration: number
 }
 
 interface ScoreProgressData {
@@ -104,7 +105,7 @@ export function EvalDrawer({
                     </span>
                   </div>
                   <div className="w-px h-4 bg-gray-300 mx-1"></div>
-                  <div className="inline-flex items-center gap-1.5">0ms</div>
+                  <div className="inline-flex items-center gap-1.5">{selectedResult.duration}ms</div>
                   <div className="w-px h-4 bg-gray-300 mx-1"></div>
                   <div className="inline-flex items-center gap-1.5">
                     <span>{formatDate(selectedResult.createdAt)}</span>
@@ -134,7 +135,7 @@ export function EvalDrawer({
                     <span className="block text-sm font-medium text-gray-600">
                       Test {index + 1}
                     </span>
-                    <span className="text-xs text-gray-600">0ms</span>
+                    <span className="text-xs text-gray-600">{result.duration}ms</span>
                   </div>
                   <div className="relative w-full">
                     <div className="w-full rounded-full h-1 bg-gray-300"></div>

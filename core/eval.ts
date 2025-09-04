@@ -59,6 +59,7 @@ export interface ChartDataPoint {
 export interface ScoreProgressPoint {
   version: number;
   score: number;
+  duration: number;
   date: string;
 }
 

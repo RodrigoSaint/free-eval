@@ -1,3 +1,4 @@
+import { setTimeout } from "node:timers/promises";
 import { EvalDomain } from "./domain/eval.ts";
 import { DbEvalRepository } from "./infrastructure/eval.ts";
 
@@ -15,6 +16,7 @@ evalDomain.run({
   // The task to perform
   // - TODO: Replace with your LLM call
   task: async (input) => {
+    await setTimeout(100 * Math.random())
     return input + " World!";
   },
   // The scoring methods for the eval
@@ -44,6 +46,7 @@ evalDomain.run({
   // The task to perform
   // - TODO: Replace with your LLM call
   task: async (input) => {
+    await setTimeout(100 * Math.random())
     return input;
   },
   // The scoring methods for the eval
