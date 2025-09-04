@@ -126,6 +126,38 @@ class CustomEvalRepository implements EvalRepository {
 const evalDomain = new EvalDomain(new CustomEvalRepository());
 ```
 
+## Database Configuration
+
+Free Eval uses SQLite with Drizzle ORM and supports both local and remote LibSQL databases. Configure using environment variables:
+
+### Local SQLite Database (Default)
+```bash
+# Uses database.db in current directory (default)
+deno run -A your-app.ts
+
+# Custom local database path
+DATABASE_PATH=./data/my-database.db deno run -A your-app.ts
+```
+
+### Remote LibSQL Database
+```bash
+# Using full database URL
+DATABASE_URL=libsql://your-db.turso.io deno run -A your-app.ts
+
+# With authentication token
+DATABASE_URL=libsql://your-db.turso.io DATABASE_AUTH_TOKEN=your-token deno run -A your-app.ts
+
+# With username and password
+DATABASE_USER=myuser DATABASE_PASSWORD=mypass deno run -A your-app.ts
+```
+
+### Environment Variables
+- `DATABASE_PATH` - Local SQLite file path (default: `database.db`)
+- `DATABASE_URL` - Full database URL (overrides DATABASE_PATH)
+- `DATABASE_USER` - Database username
+- `DATABASE_PASSWORD` - Database password
+- `DATABASE_AUTH_TOKEN` - LibSQL authentication token
+
 ## Web Dashboard
 
 The framework includes a built-in web dashboard for visualizing results:
@@ -135,6 +167,20 @@ The framework includes a built-in web dashboard for visualizing results:
 - **Detailed Results**: Inspect individual test cases with inputs, outputs, and scores
 - **Progress Charts**: Visual representation of score trends across versions
 - **Input Tracking**: See how specific inputs perform across different model versions
+
+### Running the Dashboard
+
+#### Using Docker
+```bash
+# Clone the repository
+git clone https://github.com/RodrigoSaint/free-eval
+# Build the image
+docker build -t free-eval-dashboard .
+# Run the dashboard using Docker
+docker run -p 8080:8080 -v $(pwd)/database.db:/app/database.db free-eval-dashboard
+
+# Access dashboard at http://localhost:8080
+```
 
 ## Architecture
 
