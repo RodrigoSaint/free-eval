@@ -22,8 +22,17 @@ Free Eval provides a straightforward way to:
 - ✅ **Self-Hostable**: Run entirely on your own infrastructure
 - ✅ **Free**: Completely free to use, no strings attached
 
+### Eval Groups Dashboard
+
 ![image](./images/eval_groups.png)
+
+It shows the progress over time of a whole group giving you access to the past versions if needed.
+
+### Eval Details
+
 ![image](./images/eval_details.png)
+
+Displays the details of an individual run, if there are others with the same input fingerprint it will show also a chart with the progress over time.
 
 ## Quick Start
 

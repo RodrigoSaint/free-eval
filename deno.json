@@ -1,6 +1,6 @@
 {
   "name": "@rodrigosaint/free-eval",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "lock": false,
   "exports": "./package.ts",
   "license": "MIT",
