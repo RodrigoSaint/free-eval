@@ -11,6 +11,7 @@ import * as $api_score_progress_fingerprint_ from "./routes/api/score-progress/[
 import * as $index from "./routes/index.tsx";
 import * as $EvalDashboard from "./islands/EvalDashboard.tsx";
 import * as $SimpleChart from "./islands/SimpleChart.tsx";
+import * as $TimeChart from "./islands/TimeChart.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -27,6 +28,7 @@ const manifest = {
   islands: {
     "./islands/EvalDashboard.tsx": $EvalDashboard,
     "./islands/SimpleChart.tsx": $SimpleChart,
+    "./islands/TimeChart.tsx": $TimeChart,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

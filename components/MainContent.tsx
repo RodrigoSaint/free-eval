@@ -1,5 +1,5 @@
 import { useState, useEffect } from "preact/hooks";
-import { EvalDrawer } from "./EvalDrawer.tsx";
+import { DurationProgressData, EvalDrawer } from "./EvalDrawer.tsx";
 import SimpleChart from "../islands/SimpleChart.tsx";
 
 interface EvalResult {
@@ -11,6 +11,7 @@ interface EvalResult {
   inputFingerPrint: string;
   evalGroupId: string;
   createdAt: string;
+  duration: number
 }
 
 interface EvalGroupDetails {
@@ -48,6 +49,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [chartLoading, setChartLoading] = useState(false);
   const [scoreProgress, setScoreProgress] = useState<ScoreProgressData[]>([]);
+  const [durationProgressData, setDurationProgressData] = useState<DurationProgressData[]>()
 
   // Fetch chart data when groupDetails changes
   useEffect(() => {
@@ -75,6 +77,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
       const response = await fetch(`/api/score-progress/${encodeURIComponent(fingerprint)}`);
       const data = await response.json();
       setScoreProgress(data);
+      setDurationProgressData(data);
     } catch (error) {
       console.error('Error fetching score progress:', error);
       setScoreProgress([]);
@@ -296,6 +299,7 @@ export function MainContent({ groupDetails, onShowVersions, loading }: MainConte
           evalName={groupDetails.name}
           evalScore={groupDetails.avgScore}
           scoreProgress={scoreProgress}
+          durationProgress={durationProgressData}
         />
       )}
     </div>

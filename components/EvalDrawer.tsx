@@ -1,4 +1,5 @@
 import SimpleChart from "../islands/SimpleChart.tsx";
+import TimeChart from "../islands/TimeChart.tsx";
 
 interface EvalResult {
   id: string;
@@ -18,6 +19,12 @@ interface ScoreProgressData {
   date: string;
 }
 
+export interface DurationProgressData {
+  version: number;
+  duration: number;
+  date: string;
+}
+
 interface EvalDrawerProps {
   isOpen: boolean;
   results: EvalResult[];
@@ -27,6 +34,7 @@ interface EvalDrawerProps {
   evalName: string;
   evalScore: number;
   scoreProgress?: ScoreProgressData[];
+  durationProgress?: DurationProgressData[];
 }
 
 export function EvalDrawer({ 
@@ -36,7 +44,8 @@ export function EvalDrawer({
   onClose, 
   onSelectResult,
   evalScore,
-  scoreProgress
+  scoreProgress,
+  durationProgress
 }: EvalDrawerProps) {
   if (!isOpen || results.length === 0) return null;
 
@@ -268,6 +277,20 @@ export function EvalDrawer({
                     </div>
                   </div>
                     <SimpleChart data={scoreProgress}  />
+                  </>
+                )}
+                {/* Duration Progress Chart */}
+                {durationProgress && durationProgress.length > 1 && (
+                  <>
+                    <div className="h-px w-full bg-gray-200 mt-6 mb-4"></div>
+                   <div className="mb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-grow">
+                        <h2 className="font-medium text-base text-gray-600">Duration Progress</h2>
+                      </div>
+                    </div>
+                  </div>
+                    <TimeChart data={durationProgress}  />
                   </>
                 )}
               </div>
