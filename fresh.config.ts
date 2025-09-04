@@ -4,8 +4,6 @@ import tailwind from "$fresh/plugins/tailwind.ts";
 export default defineConfig({
   plugins: [
     tailwind({
-      configFile: "./tailwind.config.ts",
-      cssFile: "./static/styles.css",
     })
   ],
 });
