@@ -39,8 +39,7 @@ Displays the details of an individual run, if there are others with the same inp
 ### Basic Usage
 
 ```typescript
-import { EvalDomain } from "./domain/eval.ts";
-import { DbEvalRepository } from "./infrastructure/eval.ts";
+import { EvalDomain, DbEvalRepository } from "@rodrigosaint/free-eval";
 
 const evalRepository = new DbEvalRepository()
 // Domain can receive any instance of EvalRepository
@@ -101,7 +100,7 @@ await evalDomain.run({
 In case you want to store the data in other ways you can implement the `EvalRepository` interface to use your preferred storage backend:
 
 ```typescript
-import { EvalRepository, EvalGroup, EvalRecord } from "./core/eval.ts";
+import { EvalRepository, EvalGroup, EvalRecord } from "@rodrigosaint/free-eval";
 
 class CustomEvalRepository implements EvalRepository {
   async getMaxVersion(name: string): Promise<number> {
@@ -129,6 +128,15 @@ const evalDomain = new EvalDomain(new CustomEvalRepository());
 ## Database Configuration
 
 Free Eval uses SQLite with Drizzle ORM and supports both local and remote LibSQL databases. Configure using environment variables:
+
+### Creating the database
+
+```ts
+// Calling this function or running the dashboard will create the DB and its tables
+import { createDbInstance } from "@rodrigosaint/free-eval";
+await createDbInstance()
+
+```
 
 ### Local SQLite Database (Default)
 ```bash

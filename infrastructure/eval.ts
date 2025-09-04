@@ -1,6 +1,5 @@
 import { db, evalGroups, evals } from './db.ts';
-import { eq, max, desc, count, avg, sql } from 'drizzle-orm';
-import { migrate } from 'drizzle-orm/libsql/migrator';
+import { eq, max, desc, count, avg } from 'drizzle-orm';
 import { 
   EvalRepository, 
   EvalRecord, 
@@ -12,9 +11,7 @@ import {
 } from '../core/eval.ts'
 
 export class DbEvalRepository implements EvalRepository {
-  async initializeDatabase(): Promise<void> {
-    await migrate(db, { migrationsFolder: './drizzle' });
-  }
+
   async getMaxVersion(name: string): Promise<number | null> {
     const [maxVersionResult] = await db
       .select({ maxVersion: max(evalGroups.version) })
