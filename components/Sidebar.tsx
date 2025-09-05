@@ -1,12 +1,4 @@
-interface EvalGroupWithLatestRun {
-  id: string;
-  name: string;
-  model: string;
-  latestVersion: number;
-  totalRuns: number;
-  lastRunAt: string;
-  avgScore: number;
-}
+import { EvalGroupWithLatestRun } from '../core/eval.ts';
 
 interface SidebarProps {
   evalGroups: EvalGroupWithLatestRun[];

@@ -1,29 +1,6 @@
 import SimpleChart from "../islands/SimpleChart.tsx";
 import TimeChart from "../islands/TimeChart.tsx";
-
-interface EvalResult {
-  id: string;
-  input: string;
-  output: string;
-  expected: string;
-  score: number;
-  inputFingerPrint: string;
-  evalGroupId: string;
-  createdAt: string;
-  duration: number
-}
-
-interface ScoreProgressData {
-  version: number;
-  score: number;
-  date: string;
-}
-
-export interface DurationProgressData {
-  version: number;
-  duration: number;
-  date: string;
-}
+import { EvalRecord as EvalResult, ScoreProgressPoint as ScoreProgressData, ScoreProgressPoint as DurationProgressData } from "../core/eval.ts";
 
 interface EvalDrawerProps {
   isOpen: boolean;

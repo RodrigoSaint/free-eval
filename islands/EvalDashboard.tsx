@@ -2,48 +2,12 @@ import { useState, useEffect } from "preact/hooks";
 import { Sidebar } from "../components/Sidebar.tsx";
 import { MainContent } from "../components/MainContent.tsx";
 import { VersionHistory } from "../components/VersionHistory.tsx";
-
-interface EvalGroupWithLatestRun {
-  id: string;
-  name: string;
-  model: string;
-  latestVersion: number;
-  totalRuns: number;
-  lastRunAt: string;
-  avgScore: number;
-}
-
-interface EvalResult {
-  id: string;
-  input: string;
-  output: string;
-  expected: string;
-  score: number;
-  inputFingerPrint: string;
-  evalGroupId: string;
-  createdAt: string;
-}
-
-interface EvalGroupDetails {
-  id: string;
-  name: string;
-  model: string;
-  version: number;
-  createdAt: string;
-  results: EvalResult[];
-  avgScore: number;
-  totalTests: number;
-}
-
-interface EvalVersion {
-  id: string;
-  name: string;
-  model: string;
-  version: number;
-  createdAt: string;
-  avgScore: number;
-  totalTests: number;
-}
+import { 
+  EvalGroupWithLatestRun, 
+  EvalRecord as EvalResult, 
+  EvalGroupDetails, 
+  EvalVersion 
+} from "../core/eval.ts";
 
 export default function EvalDashboard() {
   const [evalGroups, setEvalGroups] = useState<EvalGroupWithLatestRun[]>([]);

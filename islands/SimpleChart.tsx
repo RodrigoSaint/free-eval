@@ -1,15 +1,10 @@
 import { useEffect, useRef } from "preact/hooks";
+import { ChartDataPoint } from '../core/eval.ts';
 
 declare global {
   interface Window {
     Chart: any;
   }
-}
-
-interface ChartDataPoint {
-  version: number;
-  score: number;
-  date: string;
 }
 
 interface SimpleChartProps {

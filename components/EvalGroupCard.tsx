@@ -1,16 +1,8 @@
-interface EvalGroupWithLatestRun {
-  id: number;
-  name: string;
-  model: string;
-  latestVersion: number;
-  totalRuns: number;
-  lastRunAt: string;
-  avgScore: number;
-}
+import { EvalGroupWithLatestRun } from '../core/eval.ts';
 
 interface EvalGroupCardProps {
   group: EvalGroupWithLatestRun;
-  onClick: (groupId: number) => void;
+  onClick: (groupId: string) => void;
 }
 
 export function EvalGroupCard({ group, onClick }: EvalGroupCardProps) {

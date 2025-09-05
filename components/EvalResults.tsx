@@ -1,23 +1,4 @@
-interface EvalResult {
-  id: number;
-  input: string;
-  output: string;
-  expected: string;
-  score: number;
-  inputFingerPrint: string;
-  evalGroupId: number;
-}
-
-interface EvalGroupDetails {
-  id: number;
-  name: string;
-  model: string;
-  version: number;
-  createdAt: string;
-  results: EvalResult[];
-  avgScore: number;
-  totalTests: number;
-}
+import { EvalGroupDetails } from '../core/eval.ts';
 
 interface EvalResultsProps {
   groupDetails: EvalGroupDetails;

@@ -1,44 +1,14 @@
 import { useEffect, useState } from "preact/hooks";
-import { DurationProgressData, EvalDrawer } from "./EvalDrawer.tsx";
+import { EvalDrawer } from "./EvalDrawer.tsx";
 import SimpleChart from "../islands/SimpleChart.tsx";
 import TimeChart from "../islands/TimeChart.tsx";
-
-interface EvalResult {
-  id: string;
-  input: string;
-  output: string;
-  expected: string;
-  score: number;
-  inputFingerPrint: string;
-  evalGroupId: string;
-  createdAt: string;
-  duration: number;
-}
-
-interface EvalGroupDetails {
-  id: string;
-  name: string;
-  model: string;
-  version: number;
-  createdAt: string;
-  results: EvalResult[];
-  avgScore: number;
-  totalTests: number;
-}
-
-interface ChartDataPoint {
-  version: number;
-  score: number;
-  date: string;
-  duration: number;
-}
-
-interface ScoreProgressData {
-  version: number;
-  score: number;
-  date: string;
-  duration: number;
-}
+import { 
+  EvalRecord as EvalResult, 
+  EvalGroupDetails, 
+  ChartDataPoint,
+  ScoreProgressPoint as ScoreProgressData,
+  ScoreProgressPoint as DurationProgressData
+} from "../core/eval.ts";
 
 interface MainContentProps {
   groupDetails: EvalGroupDetails | null;

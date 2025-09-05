@@ -1,12 +1,4 @@
-interface EvalVersion {
-  id: string;
-  name: string;
-  model: string;
-  version: number;
-  createdAt: string;
-  avgScore: number;
-  totalTests: number;
-}
+import { EvalVersion } from '../core/eval.ts';
 
 interface VersionHistoryProps {
   versions: EvalVersion[];

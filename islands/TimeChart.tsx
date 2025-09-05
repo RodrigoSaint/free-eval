@@ -6,14 +6,10 @@ declare global {
   }
 }
 
-interface TimeDataPoint {
-  version: number;
-  duration: number;
-  date: string;
-}
+import { ChartDataPoint, ScoreProgressPoint } from '../core/eval.ts';
 
 interface TimeChartProps {
-  data: TimeDataPoint[];
+  data: ChartDataPoint[] | ScoreProgressPoint[];
 }
 
 export default function TimeChart({ data }: TimeChartProps) {
