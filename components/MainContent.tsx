@@ -37,6 +37,7 @@ interface ScoreProgressData {
   version: number;
   score: number;
   date: string;
+  duration: number;
 }
 
 interface MainContentProps {
@@ -260,15 +261,15 @@ export function MainContent(
               </div>
             )
             : (
-              <div className="flex flex-col gap-4">
-                <div>
+              <div className="flex gap-4">
+                <div className="flex-1">
                   <h2 className="mb-2 font-medium text-lg text-gray-600">
                     Score
                   </h2>
                   <SimpleChart data={chartData} />
                 </div>
 
-                <div>
+                <div className="flex-1">
                   <h2 className="mb-2 font-medium text-lg text-gray-600">
                     Duration
                   </h2>
