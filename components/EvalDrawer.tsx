@@ -125,10 +125,8 @@ export function EvalDrawer({
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-auto">
           <div className="flex flex-row h-full">
-            {/* Results Navigation Sidebar */}
             <div className="w-44 flex flex-col gap-3 flex-shrink-0 p-2">
               {results.map((result, index) => (
                 <button
@@ -190,7 +188,7 @@ export function EvalDrawer({
                 </div>
                 <div className="mt-1 text-gray-600">
                   <div className="prose prose-sm">
-                    <p>{JSON.parse(selectedResult.input)}</p>
+                    <p>{JSON.stringify(selectedResult.input)}</p>
                   </div>
                 </div>
 

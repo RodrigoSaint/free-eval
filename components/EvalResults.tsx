@@ -84,7 +84,7 @@ export function EvalResults({ groupDetails, onShowVersions, onBack }: EvalResult
                 <div className="mb-3">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Input</label>
                   <div className="bg-gray-50 p-3 rounded border">
-                    <code className="text-sm">{result.input}</code>
+                    <code className="text-sm">{JSON.stringify(result.input)}</code>
                   </div>
                 </div>
                 

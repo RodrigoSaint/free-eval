@@ -5,9 +5,9 @@ export interface FEvalProps<Input, Output, Expected> {
   model: string;
   getInputs(): Promise<
     Array<
-      Promise<{ input: Input; expected: Expected }> | {
+      Promise<{ input: Input; expected?: Expected }> | {
         input: Input;
-        expected: Expected;
+        expected?: Expected;
       }
     >
   >;
@@ -15,7 +15,7 @@ export interface FEvalProps<Input, Output, Expected> {
   scorer(
     input: Input,
     output: Output,
-    expected: Expected,
+    expected?: Expected,
   ): Promise<number | boolean>;
 }
 
@@ -35,8 +35,11 @@ export class EvalDomain {
       nextVersion,
     );
 
+    console.debug(`Running eval group ${props.name}`)
+
     const inputPromises = await props.getInputs();
     for (const inputPromise of inputPromises) {
+      console.debug(`${props.name}: Running case ${inputPromises.indexOf(inputPromise)} of ${inputPromises.length}`)
       const { input, expected } = await inputPromise;
       const evalStartTime = Date.now();
       const output = await props.task(input);
@@ -53,11 +56,13 @@ export class EvalDomain {
         inputFingerPrint: await this.generateInputFingerprint(input),
         evalGroupId: evalGroup.id,
       });
+      console.debug(`${props.name}: Finished running case ${inputPromises.indexOf(inputPromise)} of ${inputPromises.length}`)
     }
 
     const evalGroupEndTime = Date.now();
     const totalDuration = evalGroupEndTime - evalGroupStartTime;
     await this.repository.updateEvalGroupDuration(evalGroup.id, totalDuration);
+    console.debug(`Ending the eval group run ${props.name}`)
   }
 
   private async generateInputFingerprint(input: any): Promise<string> {

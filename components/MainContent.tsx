@@ -314,14 +314,14 @@ export function MainContent(
                     <td className="px-4 py-4 max-w-xs">
                       <div className="text-sm text-gray-900 break-words">
                         <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                          {JSON.parse(result.input)}
+                          {JSON.stringify(result.input)}
                         </code>
                       </div>
                     </td>
                     <td className="px-4 py-4 max-w-xs">
                       <div className="text-sm text-gray-900 break-words">
                         <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                          {JSON.parse(result.output)}
+                          {JSON.stringify(result.output)}
                         </code>
                       </div>
                     </td>
