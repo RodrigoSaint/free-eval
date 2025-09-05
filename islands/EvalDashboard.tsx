@@ -4,7 +4,6 @@ import { MainContent } from "../components/MainContent.tsx";
 import { VersionHistory } from "../components/VersionHistory.tsx";
 import { 
   EvalGroupWithLatestRun, 
-  EvalRecord as EvalResult, 
   EvalGroupDetails, 
   EvalVersion 
 } from "../core/eval.ts";

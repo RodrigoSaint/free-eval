@@ -3,6 +3,7 @@ import { EvalRepository } from "../core/eval.ts";
 export interface FEvalProps<Input, Output, Expected> {
   name: string;
   model: string;
+  genericPrompt?: string
   getInputs(): Promise<
     Array<
       Promise<{ input: Input; expected?: Expected }> | {
@@ -29,11 +30,12 @@ export class EvalDomain {
     const nextVersion = (maxVersion ?? 0) + 1;
 
     const evalGroupStartTime = Date.now();
-    const evalGroup = await this.repository.createEvalGroup(
-      props.name,
-      props.model,
-      nextVersion,
-    );
+    const evalGroup = await this.repository.createEvalGroup({
+      name: props.name,
+      model: props.model,
+      version: nextVersion,
+      genericPrompt: props.genericPrompt
+    });
 
     console.debug(`Running eval group ${props.name}`)
 

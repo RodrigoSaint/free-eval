@@ -4,6 +4,7 @@ export const evalGroups = sqliteTable('eval_groups', {
     id: text().primaryKey().$defaultFn(() => crypto.randomUUID()),
     name: text().notNull(),
     model: text().notNull(),
+    genericPrompt: text(),
     version: integer().notNull(),
     duration: real().notNull().default(0),
     createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()).notNull(),

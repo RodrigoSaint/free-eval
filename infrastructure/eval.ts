@@ -7,7 +7,8 @@ import {
   EvalGroupDetails, 
   EvalVersion,
   ChartDataPoint,
-  ScoreProgressPoint
+  ScoreProgressPoint,
+  EvalGroup
 } from '../core/eval.ts'
 
 export class DbEvalRepository implements EvalRepository {
@@ -24,11 +25,12 @@ export class DbEvalRepository implements EvalRepository {
     return maxVersionResult?.maxVersion ?? null;
   }
 
-  async createEvalGroup(name: string, model: string, version: number): Promise<{ id: string }> {
+  async createEvalGroup({name, model, version, genericPrompt}: EvalGroup): Promise<{ id: string }> {
     const [evalGroup] = await db.insert(evalGroups).values({
       name,
       model,
       version,
+      genericPrompt
     }).returning({ id: evalGroups.id });
 
     return evalGroup;
@@ -56,6 +58,7 @@ export class DbEvalRepository implements EvalRepository {
         createdAt: evalGroups.createdAt,
         totalTests: count(evals.id),
         avgScore: avg(evals.score),
+        genericPrompt: evalGroups.genericPrompt
       })
       .from(evalGroups)
       .leftJoin(evals, eq(evalGroups.id, evals.evalGroupId))
@@ -114,6 +117,7 @@ export class DbEvalRepository implements EvalRepository {
       results: evalResults as EvalRecord[],
       avgScore,
       totalTests: evalResults.length,
+      genericPrompt: evalGroup.genericPrompt ?? undefined
     };
   }
 

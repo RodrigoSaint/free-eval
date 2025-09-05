@@ -2,6 +2,7 @@ export interface EvalGroup {
   id: string;
   name: string;
   model: string;
+  genericPrompt?: string
   version: number;
   createdAt: string;
 }
@@ -33,6 +34,7 @@ export interface EvalGroupDetails {
   id: string;
   name: string;
   model: string;
+  genericPrompt?: string
   version: number;
   createdAt: string;
   results: EvalRecord[];
@@ -67,7 +69,7 @@ export interface ScoreProgressPoint {
 export interface EvalRepository {
   // Original methods
   getMaxVersion(name: string): Promise<number | null>;
-  createEvalGroup(name: string, model: string, version: number): Promise<{ id: string }>;
+  createEvalGroup(evalGroup: Omit<EvalGroup, "id" | "createdAt" | "updatedAt">): Promise<{ id: string }>;
   saveEvalRecord(record: Omit<EvalRecord, 'id' | 'createdAt'>): Promise<void>;
   updateEvalGroupDuration(evalGroupId: string, totalDuration: number): Promise<void>
   

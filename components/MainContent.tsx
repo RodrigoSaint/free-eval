@@ -2,12 +2,11 @@ import { useEffect, useState } from "preact/hooks";
 import { EvalDrawer } from "./EvalDrawer.tsx";
 import SimpleChart from "../islands/SimpleChart.tsx";
 import TimeChart from "../islands/TimeChart.tsx";
-import { 
-  EvalRecord as EvalResult, 
-  EvalGroupDetails, 
+import {
   ChartDataPoint,
+  EvalGroupDetails,
+  ScoreProgressPoint as DurationProgressData,
   ScoreProgressPoint as ScoreProgressData,
-  ScoreProgressPoint as DurationProgressData
 } from "../core/eval.ts";
 
 interface MainContentProps {
@@ -202,9 +201,11 @@ export function MainContent(
       <div className="p-6">
         {/* Title and Stats */}
         <div className="mb-10">
-          <h1 className="text-2xl font-medium text-gray-700 mb-2 tracking-tight">
-            {groupDetails.name}
-          </h1>
+          <div className="mb-2">
+            <h1 className="text-2xl font-medium text-gray-700 tracking-tight">
+              {groupDetails.name}
+            </h1>
+          </div>
 
           <div className="flex items-center text-sm text-gray-600">
             <div className="flex items-center space-x-2">
@@ -219,6 +220,19 @@ export function MainContent(
             <span>{formatDate(groupDetails.createdAt)}</span>
           </div>
         </div>
+
+        {groupDetails.genericPrompt && (
+          <div className="mb-5">
+            <h2 className="mb-2 font-medium text-lg text-gray-600">
+              Prompt
+            </h2>
+            <div className="bg-gray-100 px-2 py-1 rounded">
+              <code className="text-sm text-gray-500 tracking-tight">
+                {groupDetails.genericPrompt}
+              </code>
+            </div>
+          </div>
+        )}
 
         {/* History Chart */}
         <div className="mb-10">
@@ -298,7 +312,7 @@ export function MainContent(
                     <td className="px-4 py-4 max-w-xs">
                       <div className="text-sm text-gray-900 break-words">
                         <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                          {JSON.parse(result.expected)}
+                          {result.expected && JSON.stringify(result.expected)}
                         </code>
                       </div>
                     </td>

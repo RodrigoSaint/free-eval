@@ -7,6 +7,7 @@ const evalDomain = new EvalDomain(new DbEvalRepository());
 evalDomain.run({
   name: "Greetings eval",
   model: "gpt-4",
+  genericPrompt: "Generate a greeting to the user [name]",
   getInputs: async () => {
     return [
       { input: {name: "Rodrigo", greeting: "Hey"} },

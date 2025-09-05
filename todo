@@ -1,4 +1,4 @@
-[] Reuse the same types
 [] Stop using the repository directly
-[] Handle prompts
 [] Allowing users to set the threshholds
+[] Limiting to 10 data points
+[] Handle variation when executing multiple cases

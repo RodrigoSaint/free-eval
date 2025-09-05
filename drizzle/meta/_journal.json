@@ -15,6 +15,13 @@
       "when": 1757003925452,
       "tag": "0001_broken_hiroim",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1757084245373,
+      "tag": "0002_colossal_smiling_tiger",
+      "breakpoints": true
     }
   ]
 }

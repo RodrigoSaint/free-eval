@@ -1,0 +1,1 @@
+ALTER TABLE `eval_groups` ADD `genericPrompt` text;
