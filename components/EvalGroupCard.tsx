@@ -1,4 +1,5 @@
 import { EvalGroupWithLatestRun } from '../core/eval.ts';
+import { useScoreColors } from '../hooks/useScoreColors.tsx';
 
 interface EvalGroupCardProps {
   group: EvalGroupWithLatestRun;
@@ -6,6 +7,8 @@ interface EvalGroupCardProps {
 }
 
 export function EvalGroupCard({ group, onClick }: EvalGroupCardProps) {
+  const { getScoreColor } = useScoreColors();
+  
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -13,12 +16,6 @@ export function EvalGroupCard({ group, onClick }: EvalGroupCardProps) {
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
   };
 
   return (

@@ -7,6 +7,7 @@ import {
   EvalGroupDetails, 
   EvalVersion 
 } from "../core/eval.ts";
+import { Console } from "node:console";
 
 export default function EvalDashboard() {
   const [evalGroups, setEvalGroups] = useState<EvalGroupWithLatestRun[]>([]);
@@ -52,6 +53,7 @@ export default function EvalDashboard() {
       const response = await fetch(`/api/eval-results/${groupId}`);
       const data = await response.json();
       console.log('Fetched data for group', groupId, ':', data);
+      console.log(data)
       setSelectedGroupDetails(data);
     } catch (error) {
       console.error('Error fetching eval results:', error);

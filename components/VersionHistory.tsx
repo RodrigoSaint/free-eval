@@ -1,4 +1,5 @@
 import { EvalVersion } from '../core/eval.ts';
+import { useScoreColors } from '../hooks/useScoreColors.tsx';
 
 interface VersionHistoryProps {
   versions: EvalVersion[];
@@ -16,12 +17,6 @@ export function VersionHistory({ versions, evalName, onSelectVersion, onClose }:
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
   };
 
   return (
@@ -42,32 +37,35 @@ export function VersionHistory({ versions, evalName, onSelectVersion, onClose }:
         
         <div className="overflow-y-auto max-h-96">
           <div className="space-y-2 p-6">
-            {versions.map((version) => (
-              <div
-                key={version.id}
-                onClick={() => onSelectVersion(version.id)}
-                className="flex justify-between items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="flex flex-col">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium text-gray-900">v{version.version}</span>
-                      {version.version === Math.max(...versions.map(v => v.version)) && (
-                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Latest</span>
-                      )}
+            {versions.map((version) => {
+              const { getScoreColor } = useScoreColors(version.threshold);
+              return (
+                <div
+                  key={version.id}
+                  onClick={() => onSelectVersion(version.id)}
+                  className="flex justify-between items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="flex flex-col">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-medium text-gray-900">v{version.version}</span>
+                        {version.version === Math.max(...versions.map(v => v.version)) && (
+                          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Latest</span>
+                        )}
+                      </div>
+                      <span className="text-sm text-gray-500">{formatDate(version.createdAt)}</span>
                     </div>
-                    <span className="text-sm text-gray-500">{formatDate(version.createdAt)}</span>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm text-gray-500">{version.totalTests} tests</span>
+                    <span className={`text-lg font-semibold ${getScoreColor(version.avgScore)}`}>
+                      {(version.avgScore).toFixed(0)}%
+                    </span>
                   </div>
                 </div>
-                
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-500">{version.totalTests} tests</span>
-                  <span className={`text-lg font-semibold ${getScoreColor(version.avgScore)}`}>
-                    {(version.avgScore).toFixed(0)}%
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { EvalGroupDetails } from '../core/eval.ts';
+import { useScoreColors } from '../hooks/useScoreColors.tsx';
 
 interface EvalResultsProps {
   groupDetails: EvalGroupDetails;
@@ -7,6 +8,8 @@ interface EvalResultsProps {
 }
 
 export function EvalResults({ groupDetails, onShowVersions, onBack }: EvalResultsProps) {
+  const { getScoreColor, isPassingScore } = useScoreColors(groupDetails.threshold);
+  
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -15,12 +18,6 @@ export function EvalResults({ groupDetails, onShowVersions, onBack }: EvalResult
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
   };
 
   return (
@@ -86,7 +83,7 @@ export function EvalResults({ groupDetails, onShowVersions, onBack }: EvalResult
               
               <div className="ml-6">
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(result.score)}`}>
-                  {result.score > 60 ? '✓ Pass' : '✗ Fail'}
+                  {isPassingScore(result.score) ? '✓ Pass' : '✗ Fail'}
                 </span>
               </div>
             </div>

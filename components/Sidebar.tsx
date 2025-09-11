@@ -1,4 +1,5 @@
 import { EvalGroupWithLatestRun } from '../core/eval.ts';
+import { useScoreColors } from '../hooks/useScoreColors.tsx';
 
 interface SidebarProps {
   evalGroups: EvalGroupWithLatestRun[];
@@ -8,32 +9,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ evalGroups, selectedGroupId, onSelectGroup, onShowVersions }: SidebarProps) {
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  const getScoreIcon = (score: number) => {
-    if (score >= 0.8) return (
-      <svg className="size-3 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="m8 14 4-4 4 4"/>
-      </svg>
-    );
-    if (score >= 0.6) return (
-      <svg className="size-3 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="m10 8 4 4-4 4"/>
-      </svg>
-    );
-    return (
-      <svg className="size-3 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="m16 14-4-4-4 4"/>
-      </svg>
-    );
-  };
+  const { getScoreColor, getScoreIcon } = useScoreColors();
 
   const overallScore = evalGroups.length > 0 
     ? evalGroups.reduce((acc, group) => acc + group.avgScore, 0) / evalGroups.length 

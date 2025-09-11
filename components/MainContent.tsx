@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import { useScoreColors } from "../hooks/useScoreColors.tsx";
 import { EvalDrawer } from "./EvalDrawer.tsx";
 import SimpleChart from "../islands/SimpleChart.tsx";
 import TimeChart from "../islands/TimeChart.tsx";
@@ -18,6 +19,7 @@ interface MainContentProps {
 export function MainContent(
   { groupDetails, onShowVersions, loading }: MainContentProps,
 ) {
+  const { getScoreColor, getScoreIcon } = useScoreColors(groupDetails?.threshold);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedResultIndex, setSelectedResultIndex] = useState(0);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
@@ -118,47 +120,6 @@ export function MainContent(
     });
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    return "text-red-600";
-  };
-
-  const getScoreIcon = (score: number) => {
-    if (score === 1) {
-      return (
-        <svg
-          className="size-3 text-green-600"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="m8 14 4-4 4 4" />
-        </svg>
-      );
-    }
-    return (
-      <svg
-        className="size-3 text-red-600"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="m16 14-4-4-4 4" />
-      </svg>
-    );
-  };
-
   return (
     <div className="flex-1 bg-gray-50">
       {/* Header */}
@@ -209,7 +170,7 @@ export function MainContent(
 
           <div className="flex items-center text-sm text-gray-600">
             <div className="flex items-center space-x-2">
-              <span>{groupDetails.avgScore.toFixed(0)}%</span>
+              <span className={getScoreColor(groupDetails.avgScore)}>{groupDetails.avgScore.toFixed(0)}%</span>
               {getScoreIcon(groupDetails.avgScore)}
             </div>
             <div className="h-4 w-px bg-gray-300 mx-4"></div>
