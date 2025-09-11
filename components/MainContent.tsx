@@ -320,6 +320,7 @@ export function MainContent(
           evalScore={groupDetails.avgScore}
           scoreProgress={scoreProgress}
           durationProgress={durationProgressData}
+          threshold={groupDetails.threshold!}
         />
       )}
     </div>

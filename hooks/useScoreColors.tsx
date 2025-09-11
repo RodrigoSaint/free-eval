@@ -11,6 +11,12 @@ export function useScoreColors(threshold?: EvalGroupThreshold) {
       return 'text-red-600';
     };
 
+    const getScoreBackgroundColor = (score: number) => {
+      if (score >= thresholds.goodScore) return 'bg-green-600';
+      if (score >= thresholds.averageScore) return 'bg-yellow-600';
+      return 'bg-red-600';
+    };
+
     const getScoreIcon = (score: number) => {
       if (score >= thresholds.goodScore) return (
         <svg className="size-3 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -40,6 +46,7 @@ export function useScoreColors(threshold?: EvalGroupThreshold) {
       getScoreColor,
       getScoreIcon,
       isPassingScore,
+      getScoreBackgroundColor,
       threshold: thresholds
     };
   }, [threshold]);

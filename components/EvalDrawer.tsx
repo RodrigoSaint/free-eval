@@ -1,6 +1,8 @@
 import SimpleChart from "../islands/SimpleChart.tsx";
 import TimeChart from "../islands/TimeChart.tsx";
 import { EvalRecord as EvalResult, ScoreProgressPoint as ScoreProgressData, ScoreProgressPoint as DurationProgressData } from "../core/eval.ts";
+import { EvalGroupThreshold } from "@rodrigosaint/free-eval";
+import { useScoreColors } from "../hooks/useScoreColors.tsx";
 
 interface EvalDrawerProps {
   isOpen: boolean;
@@ -12,6 +14,7 @@ interface EvalDrawerProps {
   evalScore: number;
   scoreProgress?: ScoreProgressData[];
   durationProgress?: DurationProgressData[];
+  threshold: EvalGroupThreshold
 }
 
 export function EvalDrawer({ 
@@ -22,27 +25,14 @@ export function EvalDrawer({
   onSelectResult,
   evalScore,
   scoreProgress,
-  durationProgress
+  durationProgress,
+  threshold
 }: EvalDrawerProps) {
+  const { getScoreIcon, getScoreBackgroundColor, getScoreColor } = useScoreColors(threshold)
   if (!isOpen || results.length === 0) return null;
 
   const selectedResult = results[selectedResultIndex];
   if (!selectedResult) return null;
-
-  const getScoreIcon = (score: number) => {
-    if (score === 1) return (
-      <svg className="size-3 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="m8 14 4-4 4 4"/>
-      </svg>
-    );
-    return (
-      <svg className="size-3 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="m10 8 4 4-4 4"/>
-      </svg>
-    );
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -86,7 +76,7 @@ export function EvalDrawer({
                 <div className="flex flex-wrap items-center gap-1.5 break-words text-sm text-gray-500">
                   <div className="inline-flex items-center gap-1.5">
                     <span className="flex items-center space-x-2">
-                      <span>{(evalScore).toFixed(0)}%</span>
+                      <span className={getScoreColor(evalScore)}>{(evalScore).toFixed(0)}%</span>
                       {getScoreIcon(evalScore)}
                     </span>
                   </div>
@@ -125,7 +115,7 @@ export function EvalDrawer({
                     <div className="w-full rounded-full h-1 bg-gray-300"></div>
                     <div 
                       className={`absolute top-0 rounded-full h-1 ${
-                        result.score === 1 ? 'bg-green-500' : 'bg-red-500'
+                        getScoreBackgroundColor(result.score)
                       }`}
                       style={{ left: '0%', width: '100%' }}
                     />
