@@ -72,6 +72,8 @@ await evalDomain.run({
 - **`task`**: Async function that performs the AI task - replace with your LLM API calls
 - **`scorer`**: Async function that calculates scores - supports boolean (pass/fail) or numeric (0-100) scoring
 - **`thresholds`** (optional): Score thresholds for color-coding results in the dashboard
+- **`concurrency`** (optional): Number of concurrent operations to run (default: 1)
+- **`delay`** (optional): Milliseconds to wait between requests (default: 0)
 
 ### Example with Percentage Scoring
 
@@ -79,6 +81,8 @@ await evalDomain.run({
 await evalDomain.run({
   name: "Classification Eval",
   model: "claude-3",
+  concurrency: 5,      // Run 5 evaluations concurrently
+  delay: 1000,         // Wait 1 second between requests
   getInputs: async () => {
     return [
       { input: "This movie is great!", expected: "positive" },

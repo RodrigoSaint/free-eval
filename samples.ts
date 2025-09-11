@@ -12,6 +12,8 @@ evalDomain.run({
     averageScore: 60,
     goodScore: 80
   },
+  concurrency: 4,
+  delay: 0,
   getInputs: async () => {
     return [
       { input: {name: "Rodrigo", greeting: "Hey"} },

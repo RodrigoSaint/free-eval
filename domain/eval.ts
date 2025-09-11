@@ -1,10 +1,13 @@
 import { EvalGroupThreshold, EvalRepository } from "../core/eval.ts";
+import PQueue from "https://deno.land/x/p_queue@1.0.1/mod.ts";
 
 export interface FEvalProps<Input, Output, Expected> {
   name: string;
   model: string;
   genericPrompt?: string
   thresholds?: EvalGroupThreshold
+  concurrency?: number
+  delay?: number
   getInputs(): Promise<
     Array<
       Promise<{ input: Input; expected?: Expected }> | {
@@ -42,26 +45,35 @@ export class EvalDomain {
     console.debug(`Running eval group ${props.name}`)
 
     const inputPromises = await props.getInputs();
-    for (const inputPromise of inputPromises) {
-      console.debug(`${props.name}: Running case ${inputPromises.indexOf(inputPromise)} of ${inputPromises.length}`)
-      const { input, expected } = await inputPromise;
-      const evalStartTime = Date.now();
-      const output = await props.task(input);
-      const evalEndTime = Date.now();
-      const duration = evalEndTime - evalStartTime;
-      const score = await props.scorer(input, output, expected);
+    const queue = new PQueue({ 
+      concurrency: props.concurrency ?? 1,
+      interval: props.delay ?? 0
+    });
 
-      await this.repository.saveEvalRecord({
-        input: JSON.stringify(input),
-        output: JSON.stringify(output),
-        expected: JSON.stringify(expected),
-        score: typeof score === "boolean" ? (score ? 1 : 0) : score,
-        duration: duration,
-        inputFingerPrint: await this.generateInputFingerprint(input),
-        evalGroupId: evalGroup.id,
-      });
-      console.debug(`${props.name}: Finished running case ${inputPromises.indexOf(inputPromise)} of ${inputPromises.length}`)
-    }
+    await queue.addAll(
+      inputPromises.map((inputPromise, index) => () => {
+        return (async () => {
+          console.debug(`${props.name}: Running case ${index} of ${inputPromises.length}`);
+          const { input, expected } = await inputPromise;
+          const evalStartTime = Date.now();
+          const output = await props.task(input);
+          const evalEndTime = Date.now();
+          const duration = evalEndTime - evalStartTime;
+          const score = await props.scorer(input, output, expected);
+
+          await this.repository.saveEvalRecord({
+            input: JSON.stringify(input),
+            output: JSON.stringify(output),
+            expected: JSON.stringify(expected),
+            score: typeof score === "boolean" ? (score ? 1 : 0) : score,
+            duration: duration,
+            inputFingerPrint: await this.generateInputFingerprint(input),
+            evalGroupId: evalGroup.id,
+          });
+          console.debug(`${props.name}: Finished running case ${index} of ${inputPromises.length}`);
+        })();
+      })
+    );
 
     const evalGroupEndTime = Date.now();
     const totalDuration = evalGroupEndTime - evalGroupStartTime;
