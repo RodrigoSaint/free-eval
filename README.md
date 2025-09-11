@@ -71,6 +71,7 @@ await evalDomain.run({
 - **`getInputs`**: Async function returning array of test cases with `input` and optional `expected` values
 - **`task`**: Async function that performs the AI task - replace with your LLM API calls
 - **`scorer`**: Async function that calculates scores - supports boolean (pass/fail) or numeric (0-100) scoring
+- **`thresholds`** (optional): Score thresholds for color-coding results in the dashboard
 
 ### Example with Percentage Scoring
 
@@ -94,6 +95,53 @@ await evalDomain.run({
   },
 });
 ```
+
+### Threshold Configuration
+
+Free Eval supports configurable score thresholds that determine color-coding in the web dashboard:
+
+- **🔴 Red**: Below average score (poor performance)
+- **🟡 Yellow**: Average score (acceptable performance) 
+- **🟢 Green**: Good score (excellent performance)
+
+```typescript
+await evalDomain.run({
+  name: "Greetings eval",
+  model: "gpt-4",
+  genericPrompt: "Generate a greeting to the user [name]",
+  thresholds: {
+    averageScore: 60,  // Yellow background for scores >= 60
+    goodScore: 80      // Green background for scores >= 80
+  },
+  getInputs: async () => {
+    return [
+      { input: {name: "Rodrigo", greeting: "Hey"} },
+      { input: {name: "John", greeting: "Hi"} },
+      { input: {name: "Susan", greeting: "Sup"} },
+      // ... more test cases
+    ];
+  },
+  task: async (input) => {
+    // Your LLM call here
+    return `${input.greeting} ${input.name}`;
+  },
+  scorer: async (input, output) => {
+    const greetings = ["Hello", "Hi", "Hey", "Good morning", "Good evening"];
+    let score = 0;
+    if(output.includes(input.name)) score += 50;
+    if(greetings.some(greeting => output.startsWith(greeting))) score += 50;
+    if(greetings.some(greeting => output.endsWith(greeting))) score -= 30;
+    return score; // Returns 0-100 score
+  },
+});
+```
+
+**Default Thresholds**: If not specified, the system uses `averageScore: 60` and `goodScore: 80`.
+
+**Dashboard Color Coding**:
+- Scores below `averageScore` (60) → **Red text/background**
+- Scores between `averageScore` (60) and `goodScore` (80) → **Yellow text/background**  
+- Scores at or above `goodScore` (80) → **Green text/background**
 
 ## Custom Storage Implementation
 
