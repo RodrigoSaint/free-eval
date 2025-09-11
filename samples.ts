@@ -8,6 +8,10 @@ evalDomain.run({
   name: "Greetings eval",
   model: "gpt-4",
   genericPrompt: "Generate a greeting to the user [name]",
+  thresholds: {
+    averageScore: 60,
+    goodScore: 80
+  },
   getInputs: async () => {
     return [
       { input: {name: "Rodrigo", greeting: "Hey"} },

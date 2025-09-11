@@ -1,9 +1,10 @@
-import { EvalRepository } from "../core/eval.ts";
+import { EvalGroupThreshold, EvalRepository } from "../core/eval.ts";
 
 export interface FEvalProps<Input, Output, Expected> {
   name: string;
   model: string;
   genericPrompt?: string
+  thresholds?: EvalGroupThreshold
   getInputs(): Promise<
     Array<
       Promise<{ input: Input; expected?: Expected }> | {
@@ -34,7 +35,8 @@ export class EvalDomain {
       name: props.name,
       model: props.model,
       version: nextVersion,
-      genericPrompt: props.genericPrompt
+      genericPrompt: props.genericPrompt,
+      threshold: props.thresholds
     });
 
     console.debug(`Running eval group ${props.name}`)

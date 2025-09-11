@@ -5,6 +5,12 @@ export interface EvalGroup {
   genericPrompt?: string
   version: number;
   createdAt: string;
+  threshold?: EvalGroupThreshold
+}
+
+export interface EvalGroupThreshold {
+  goodScore: number
+  averageScore: number
 }
 
 export interface EvalRecord {

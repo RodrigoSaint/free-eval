@@ -25,3 +25,11 @@ export const evals = sqliteTable('evals', {
 }, (table) => [
     index('input_finger_print_idx').on(table.inputFingerPrint),
 ]);
+
+export const evalGroupThreshold = sqliteTable('eval_group_threshold', {
+    id: text().primaryKey().references(() => evalGroups.id),
+    goodScore: real().notNull(),
+    averageScore: real().notNull(),
+    createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
+    updatedAt: text('updated_at').notNull().$defaultFn(() => new Date().toISOString())
+})

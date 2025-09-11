@@ -10,6 +10,7 @@ import {
   ScoreProgressPoint,
   EvalGroup
 } from '../core/eval.ts'
+import { evalGroupThreshold } from "./schema.ts";
 
 export class DbEvalRepository implements EvalRepository {
   async updateEvalGroupDuration(evalGroupId: string, totalDuration: number): Promise<void> {
@@ -25,13 +26,19 @@ export class DbEvalRepository implements EvalRepository {
     return maxVersionResult?.maxVersion ?? null;
   }
 
-  async createEvalGroup({name, model, version, genericPrompt}: EvalGroup): Promise<{ id: string }> {
+  async createEvalGroup({name, model, version, genericPrompt, threshold}: EvalGroup): Promise<{ id: string }> {
     const [evalGroup] = await db.insert(evalGroups).values({
       name,
       model,
       version,
       genericPrompt
     }).returning({ id: evalGroups.id });
+    
+    if(threshold)
+      await db.insert(evalGroupThreshold).values({
+        ...threshold,
+        id: evalGroup.id
+      })
 
     return evalGroup;
   }
