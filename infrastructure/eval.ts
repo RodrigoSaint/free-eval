@@ -8,7 +8,8 @@ import {
   EvalVersion,
   ChartDataPoint,
   ScoreProgressPoint,
-  EvalGroup
+  EvalGroup,
+  getDefaultThreshold
 } from '../core/eval.ts'
 import { evalGroupThreshold } from "./schema.ts";
 
@@ -98,12 +99,22 @@ export class DbEvalRepository implements EvalRepository {
   }
 
   async getEvalGroupDetails(groupId: string): Promise<EvalGroupDetails | null> {
-    const [evalGroup] = await db
-      .select()
+    const [evalGroupResult] = await db
+      .select({
+        id: evalGroups.id,
+        name: evalGroups.name,
+        model: evalGroups.model,
+        version: evalGroups.version,
+        createdAt: evalGroups.createdAt,
+        genericPrompt: evalGroups.genericPrompt,
+        goodScore: evalGroupThreshold.goodScore,
+        averageScore: evalGroupThreshold.averageScore,
+      })
       .from(evalGroups)
+      .leftJoin(evalGroupThreshold, eq(evalGroups.id, evalGroupThreshold.id))
       .where(eq(evalGroups.id, groupId));
 
-    if (!evalGroup) return null;
+    if (!evalGroupResult) return null;
 
     const evalResults = await db
       .select()
@@ -115,16 +126,21 @@ export class DbEvalRepository implements EvalRepository {
       ? evalResults.reduce((sum, result) => sum + result.score, 0) / evalResults.length 
       : 0;
 
+    const threshold = evalGroupResult.goodScore && evalGroupResult.averageScore
+      ? { goodScore: evalGroupResult.goodScore, averageScore: evalGroupResult.averageScore }
+      : getDefaultThreshold();
+
     return {
-      id: evalGroup.id,
-      name: evalGroup.name,
-      model: evalGroup.model,
-      version: evalGroup.version,
-      createdAt: evalGroup.createdAt,
+      id: evalGroupResult.id,
+      name: evalGroupResult.name,
+      model: evalGroupResult.model,
+      version: evalGroupResult.version,
+      createdAt: evalGroupResult.createdAt,
       results: evalResults as EvalRecord[],
       avgScore,
       totalTests: evalResults.length,
-      genericPrompt: evalGroup.genericPrompt ?? undefined
+      genericPrompt: evalGroupResult.genericPrompt ?? undefined,
+      threshold
     };
   }
 
@@ -138,22 +154,32 @@ export class DbEvalRepository implements EvalRepository {
         createdAt: evalGroups.createdAt,
         totalTests: count(evals.id),
         avgScore: avg(evals.score),
+        goodScore: evalGroupThreshold.goodScore,
+        averageScore: evalGroupThreshold.averageScore,
       })
       .from(evalGroups)
       .leftJoin(evals, eq(evalGroups.id, evals.evalGroupId))
+      .leftJoin(evalGroupThreshold, eq(evalGroups.id, evalGroupThreshold.id))
       .where(eq(evalGroups.name, name))
-      .groupBy(evalGroups.id, evalGroups.name, evalGroups.model, evalGroups.version, evalGroups.createdAt)
+      .groupBy(evalGroups.id, evalGroups.name, evalGroups.model, evalGroups.version, evalGroups.createdAt, evalGroupThreshold.goodScore, evalGroupThreshold.averageScore)
       .orderBy(desc(evalGroups.version));
 
-    return results.map(result => ({
-      id: result.id,
-      name: result.name,
-      model: result.model,
-      version: result.version,
-      createdAt: result.createdAt,
-      avgScore: parseFloat(result.avgScore ?? "0") || 0,
-      totalTests: result.totalTests || 0,
-    }));
+    return results.map(result => {
+      const threshold = result.goodScore && result.averageScore
+        ? { goodScore: result.goodScore, averageScore: result.averageScore }
+        : getDefaultThreshold();
+
+      return {
+        id: result.id,
+        name: result.name,
+        model: result.model,
+        version: result.version,
+        createdAt: result.createdAt,
+        avgScore: parseFloat(result.avgScore ?? "0") || 0,
+        totalTests: result.totalTests || 0,
+        threshold
+      };
+    });
   }
 
   async getEvalHistoryChart(name: string): Promise<ChartDataPoint[]> {

@@ -13,6 +13,13 @@ export interface EvalGroupThreshold {
   averageScore: number
 }
 
+export function getDefaultThreshold(): EvalGroupThreshold {
+  return {
+    averageScore: 60,
+    goodScore: 80
+  };
+}
+
 export interface EvalRecord {
   id: string;
   input: string;
@@ -46,6 +53,7 @@ export interface EvalGroupDetails {
   results: EvalRecord[];
   avgScore: number;
   totalTests: number;
+  threshold?: EvalGroupThreshold;
 }
 
 export interface EvalVersion {
@@ -56,6 +64,7 @@ export interface EvalVersion {
   createdAt: string;
   avgScore: number;
   totalTests: number;
+  threshold?: EvalGroupThreshold;
 }
 
 export interface ChartDataPoint {
