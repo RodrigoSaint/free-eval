@@ -3,7 +3,6 @@ import { db } from "./db.ts"
 
 export const createDbInstance = async ( ): Promise<void> => {
     console.log("Starting migration")
-    await migrate(db, { migrationsFolder: "./drizzle/" });
+    await migrate(db, { migrationsFolder: `${import.meta.dirname}/drizzle/` });
     console.log("Ending migration")
 }
-
