@@ -1,5 +1,5 @@
 import { EvalGroupThreshold, EvalRepository } from "../core/eval.ts";
-import PQueue from "https://deno.land/x/p_queue@1.0.1/mod.ts";
+import PQueue from "p-queue";
 
 export interface FEvalProps<Input, Output, Expected> {
   name: string;

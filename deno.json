@@ -46,6 +46,7 @@
     "drizzle-kit": "npm:drizzle-kit@^0.31.4",
     "drizzle-orm": "npm:drizzle-orm@^0.44.5",
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
+    "p-queue": "npm:p-queue@^8.1.1",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
