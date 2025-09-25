@@ -7,7 +7,6 @@ import {
   EvalGroupDetails, 
   EvalVersion 
 } from "../core/eval.ts";
-import { Console } from "node:console";
 
 export default function EvalDashboard() {
   const [evalGroups, setEvalGroups] = useState<EvalGroupWithLatestRun[]>([]);

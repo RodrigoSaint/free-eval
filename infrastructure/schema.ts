@@ -18,6 +18,7 @@ export const evals = sqliteTable('evals', {
     expected: text({ mode: 'json' }),
     formattedInput: text('formatted_input'),
     formattedOutput: text('formatted_output'),
+    formattedScore: text('formatted_score'),
     score: real().notNull(),
     duration: real().notNull().default(0),
     inputFingerPrint: text('input_finger_print').notNull(),

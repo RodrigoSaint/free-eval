@@ -230,6 +230,60 @@ export function EvalDrawer({
                     {getScoreIcon(selectedResult.score)}
                   </span>
                 </div>
+
+                {/* Detailed Score Table */}
+                {selectedResult.formattedScore && (() => {
+                  const scoreItems = JSON.parse(selectedResult.formattedScore);
+                  return (
+                    <>
+                      <div className="h-px w-full bg-gray-200 mt-6 mb-4"></div>
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-grow">
+                            <h2 className="font-medium text-base text-gray-600">Score Details</h2>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-1">
+                        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                          <table className="w-full text-sm">
+                            <thead className="bg-gray-50 border-b border-gray-200">
+                              <tr>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Name
+                                </th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Output
+                                </th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Expected
+                                </th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Score
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                              {scoreItems.map((item: any, idx: number) => (
+                                <tr key={idx} className="hover:bg-gray-50">
+                                  <td className="px-3 py-2 text-gray-900">{item.name}</td>
+                                  <td className="px-3 py-2 text-gray-900">{item.output}</td>
+                                  <td className="px-3 py-2 text-gray-900">{item.expected}</td>
+                                  <td className="px-3 py-2">
+                                    <span className={`${getScoreColor(item.score)}`}>
+                                      {item.score.toFixed(2)}
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
+
                 <div className="h-px w-full bg-gray-200 mt-6 mb-4"></div>
                 {/* Score Progress Chart */}
                 {scoreProgress && scoreProgress.length > 1 && (

@@ -191,6 +191,58 @@ await evalDomain.run({
 
 This makes complex evaluation results much more readable while preserving all original data for analysis.
 
+## Detailed Score Breakdown
+
+Free Eval supports detailed score breakdown functionality, allowing you to return comprehensive scoring information that shows how each component of your evaluation contributes to the final score. This is particularly useful for complex evaluations with multiple criteria.
+
+### Configuration
+
+Instead of returning a simple number or boolean from your scorer function, you can return an object with detailed breakdown:
+
+```typescript
+await evalDomain.run({
+  //...
+  scorer: async (input, output) => {
+    const score = nameScore + greetingScore;
+    return {
+      total: score,
+      items: [
+        { name: "name", score: nameScore, expected: input.name, output },
+        {
+          name: "greeting",
+          score: greetingScore,
+          expected: input.greeting,
+          output,
+        },
+      ],
+    };
+  },
+});
+```
+
+### Score Details Interface
+
+The detailed score object must follow this structure:
+
+```typescript
+{
+  total: number,                    // Overall score (0-100)
+  items: Array<{
+    name: string,                   // Component name (e.g., "accuracy", "relevance")
+    output: string,                 // Actual output value
+    expected: string,               // Expected value
+    score: number                   // Component score (0-100)
+  }>
+}
+```
+
+### Dashboard Display
+
+When detailed scores are provided, the evaluation dashboard displays a comprehensive breakdown table showing each scoring component:
+
+![Detailed Score Breakdown](./images/complex_eval_score.png)
+
+
 ## Custom Storage Implementation
 
 In case you want to store the data in other ways you can implement the `EvalRepository` interface to use your preferred storage backend:

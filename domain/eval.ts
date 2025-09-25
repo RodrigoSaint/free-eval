@@ -10,7 +10,6 @@ export interface FEvalProps<Input, Output, Expected> {
   delay?: number
   formatInputs?: (input: Input) => string;
   formatOutputs?: (output: Output) => string;
-  // scorer can return { score: number, items: Array<{name: string, output: number, expected: number}> } 
   getInputs(): Promise<
     Array<
       Promise<{ input: Input; expected?: Expected }> | {
@@ -24,7 +23,7 @@ export interface FEvalProps<Input, Output, Expected> {
     input: Input,
     output: Output,
     expected?: Expected,
-  ): Promise<number | boolean>;
+  ): Promise<number | boolean | {total: number, items: Array<{name: string, output: string, expected: string, score: number}>}>;
 }
 
 export class EvalDomain {
@@ -63,6 +62,15 @@ export class EvalDomain {
           const evalEndTime = Date.now();
           const duration = evalEndTime - evalStartTime;
           const score = await props.scorer(input, output, expected);
+          let finalScore: number;
+          let formattedScore: string | undefined;
+
+          if (typeof score === "object" && score !== null && "total" in score) {
+            finalScore = score.total;
+            formattedScore = JSON.stringify(score.items);
+          } else {
+            finalScore = typeof score === "boolean" ? (score ? 1 : 0) : score;
+          }
 
           await this.repository.saveEvalRecord({
             input: JSON.stringify(input),
@@ -70,7 +78,8 @@ export class EvalDomain {
             expected: JSON.stringify(expected),
             formattedInput: props.formatInputs ? props.formatInputs(input) : undefined,
             formattedOutput: props.formatOutputs ? props.formatOutputs(output) : undefined,
-            score: typeof score === "boolean" ? (score ? 1 : 0) : score,
+            formattedScore: formattedScore,
+            score: finalScore,
             duration: duration,
             inputFingerPrint: await this.generateInputFingerprint(input),
             evalGroupId: evalGroup.id,

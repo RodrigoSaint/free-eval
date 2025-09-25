@@ -1,0 +1,1 @@
+ALTER TABLE `evals` ADD `formatted_score` text;
