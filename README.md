@@ -183,12 +183,7 @@ Free Eval uses SQLite with Drizzle ORM and supports both local and remote LibSQL
 
 ### Creating the database
 
-```ts
-// Calling this function or running the dashboard will create the DB and its tables
-import { createDbInstance } from "@rodrigosaint/free-eval";
-await createDbInstance()
-
-```
+Run the dashboard. It will create the database and run the necessary migrations for you. If you need to change its location follow the instructions below
 
 ### Local SQLite Database (Default)
 ```bash
@@ -234,8 +229,13 @@ The framework includes a built-in web dashboard for visualizing results:
 ```bash
 # Clone the repository
 git clone https://github.com/RodrigoSaint/free-eval
+
 # Build the image
 docker build -t free-eval-dashboard .
+
+#Create the database file
+touch database.db
+
 # Run the dashboard using Docker
 docker run -p 8080:8080 -v $(pwd)/database.db:/app/database.db free-eval-dashboard
 

@@ -1,6 +1,6 @@
 {
   "name": "@rodrigosaint/free-eval",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "lock": false,
   "exports": "./package.ts",
   "license": "MIT",
@@ -37,7 +37,8 @@
       "example.html",
       "tailwind.config.ts",
       "web.ts",
-      "web-main.ts"
+      "web-main.ts",
+      "drizzle"
     ]
   },
   "imports": {

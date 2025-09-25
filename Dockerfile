@@ -7,6 +7,7 @@ RUN deno compile --no-check --include static --include _fresh --include deno.jso
 FROM debian:bookworm-slim
 WORKDIR /app
 COPY --from=builder /app/webapp .
+COPY --from=builder /app/drizzle ./drizzle
 RUN chmod +x ./webapp
 EXPOSE 8000
 CMD ["./webapp"]
