@@ -25,6 +25,8 @@ export interface EvalRecord {
   input: string;
   output: string;
   expected: string;
+  formattedInput?: string;
+  formattedOutput?: string;
   score: number;
   inputFingerPrint: string;
   evalGroupId: string;

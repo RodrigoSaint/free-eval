@@ -45,15 +45,7 @@ export class DbEvalRepository implements EvalRepository {
   }
 
   async saveEvalRecord(record: Omit<EvalRecord, 'id' | 'createdAt'>): Promise<void> {
-    await db.insert(evals).values({
-      input: record.input,
-      output: record.output,
-      expected: record.expected,
-      score: record.score,
-      inputFingerPrint: record.inputFingerPrint,
-      evalGroupId: record.evalGroupId,
-      duration: record.duration
-    });
+    await db.insert(evals).values(record);
   }
 
   async getAllEvalGroups(): Promise<EvalGroupWithLatestRun[]> {

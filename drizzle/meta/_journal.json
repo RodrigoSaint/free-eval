@@ -29,6 +29,13 @@
       "when": 1757599845670,
       "tag": "0003_brave_frightful_four",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1758813442731,
+      "tag": "0004_opposite_tombstone",
+      "breakpoints": true
     }
   ]
 }

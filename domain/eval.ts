@@ -8,6 +8,9 @@ export interface FEvalProps<Input, Output, Expected> {
   thresholds?: EvalGroupThreshold
   concurrency?: number
   delay?: number
+  formatInputs?: (input: Input) => string;
+  formatOutputs?: (output: Output) => string;
+  // scorer can return { score: number, items: Array<{name: string, output: number, expected: number}> } 
   getInputs(): Promise<
     Array<
       Promise<{ input: Input; expected?: Expected }> | {
@@ -65,6 +68,8 @@ export class EvalDomain {
             input: JSON.stringify(input),
             output: JSON.stringify(output),
             expected: JSON.stringify(expected),
+            formattedInput: props.formatInputs ? props.formatInputs(input) : undefined,
+            formattedOutput: props.formatOutputs ? props.formatOutputs(output) : undefined,
             score: typeof score === "boolean" ? (score ? 1 : 0) : score,
             duration: duration,
             inputFingerPrint: await this.generateInputFingerprint(input),

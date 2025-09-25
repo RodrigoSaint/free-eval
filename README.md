@@ -147,6 +147,50 @@ await evalDomain.run({
 - Scores between `averageScore` (60) and `goodScore` (80) → **Yellow text/background**  
 - Scores at or above `goodScore` (80) → **Green text/background**
 
+## Input/Output Formatting
+
+Free Eval supports optional formatting functions to display more readable inputs and outputs in the web dashboard. This is particularly useful when working with complex data structures that need human-friendly representation.
+
+### Configuration
+
+You can provide optional `formatInputs` and `formatOutputs` functions in your evaluation configuration:
+
+```typescript
+await evalDomain.run({
+  name: "Greetings eval",
+  model: "gpt-4",
+  formatInputs(input) { 
+    return `${input.greeting} ${input.name}`;
+  },
+  formatOutputs(output) { 
+    return `Greeting: ${output}`;
+  },
+  getInputs: async () => {
+    return [
+      { input: {name: "Rodrigo", greeting: "Hey"} },
+      { input: {name: "John", greeting: "Hi"} },
+      { input: {name: "Susan", greeting: "Sup"} },
+      // ... more test cases
+    ];
+  },
+  task: async (input) => {
+    return `${input.greeting} ${input.name}`;
+  },
+  scorer: async (input, output) => {
+    // Your scoring logic here
+    return score;
+  },
+});
+```
+
+**Without Formatting**:
+![Unformatted Results](./images/eval_unformatted.png)
+
+**With Formatting**:
+![Formatted Results](./images/eval_formatted.png)
+
+This makes complex evaluation results much more readable while preserving all original data for analysis.
+
 ## Custom Storage Implementation
 
 In case you want to store the data in other ways you can implement the `EvalRepository` interface to use your preferred storage backend:

@@ -14,6 +14,8 @@ evalDomain.run({
   },
   concurrency: 4,
   delay: 0,
+  formatInputs(input) { return `${input.greeting} ${input.name}`},
+  formatOutputs(output) { return `Greeting: ${output}`},
   getInputs: async () => {
     return [
       { input: {name: "Rodrigo", greeting: "Hey"} },
